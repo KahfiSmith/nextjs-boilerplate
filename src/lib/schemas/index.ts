@@ -1,3 +1,11 @@
-// Placeholder module to keep this scaffold directory tracked in git.
-// Replace this file with real implementation when the feature is built.
-export {};
+export {
+  externalAuthResponseSchema,
+  externalAuthUserPayloadSchema,
+  loginCredentialsSchema,
+} from "@/lib/schemas/auth.schema";
+export type {
+  ExternalAuthResponse,
+  NormalizedLoginCredentials,
+} from "@/lib/schemas/auth.schema";
+export { healthResponseSchema } from "@/lib/schemas/health.schema";
+export type { HealthResponse } from "@/lib/schemas/health.schema";

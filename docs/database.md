@@ -7,14 +7,11 @@ This document defines database workflow and safety rules for this fullstack repo
 - Prevent accidental schema drift from direct push commands.
 
 ## Current Setup
-- Repository includes database scaffold scripts in `package.json`:
-  - `pnpm db:push`
-  - `pnpm db:studio`
-  - `pnpm db:seed`
-- Current DB-related folders are scaffolded:
-  - `src/lib/db`
+- No database CLI tooling is installed by default in this boilerplate.
+- Active persistence-related application code currently lives in:
   - `src/lib/repositories`
   - `src/lib/services`
+- Add `src/lib/db` and database scripts only when a concrete database implementation is introduced.
 
 ## Environment Variables
 - `DATABASE_URL` is required when running database commands.
@@ -23,9 +20,9 @@ This document defines database workflow and safety rules for this fullstack repo
 ## Recommended Workflow
 
 ### Local Development
-- `db:push` is acceptable for rapid local prototyping.
-- `db:studio` is optional for data inspection.
-- `db:seed` can be used for local test data.
+- Choose one database stack first (for example Prisma, Drizzle, or direct SQL).
+- Add only the scripts that are backed by real project files and installed tooling.
+- Keep local setup reproducible through committed config and documented commands.
 
 ### Shared Environments (Staging/Production)
 - Do not use direct schema push to production databases.

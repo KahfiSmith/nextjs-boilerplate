@@ -7,6 +7,10 @@ This document defines architecture boundaries that must be preserved.
 - React 19
 - TypeScript strict
 - Tailwind CSS v4
+- TanStack Query
+- React Hook Form
+- `@hookform/resolvers`
+- Zod
 - shadcn/ui-style component system
 - Jest for testing
 
@@ -19,8 +23,12 @@ This document defines architecture boundaries that must be preserved.
   - Reusable UI primitives with no domain knowledge.
 - `src/components/features/*`
   - Feature and use-case level UI composition.
-- `src/components/providers/*`
+- `src/providers/*`
   - App-level providers (auth, theme, state).
+- `src/hooks/*`
+  - Reusable React hooks and TanStack Query wrappers for client-side state and fetching.
+- `src/lib/api/*`
+  - Shared fetch utilities and internal API clients for frontend data access.
 - `src/lib/services/*`
   - Business logic and use-case orchestration.
 - `src/lib/repositories/*`
@@ -33,10 +41,11 @@ This document defines architecture boundaries that must be preserved.
   - App configuration, env access, constants.
 
 ## Dependency Direction
-`app/page/api -> features -> services -> repositories -> schemas/types/utils`
+`app/page/api -> features -> hooks -> lib(api/services/repositories/clients) -> schemas/types/utils`
 
 Rules:
 - `components/ui` must not import service or repository modules.
+- Hooks can depend on `lib/api`, but business rules should stay in services.
 - Route handlers should not contain complex domain logic.
 - Service layer must not depend on UI component modules.
 
@@ -49,7 +58,7 @@ Use these default paths so prompts and implementations stay consistent:
 - Shared types/DTO: `src/types/<resource>.types.ts`
 - Internal API caller (frontend fetch): `src/lib/api/<resource>.client.ts`
 - External API clients (Stripe/OpenAI/etc): `src/lib/clients/<provider>.client.ts`
-- UI data hooks: `src/hooks/use-<resource>.ts`
+- UI data hooks: `src/hooks/queries/use-<resource>-query.ts`
 - Feature components: `src/components/features/<resource>/...`
 - Env mapping: `src/config/env.ts` + `.env.local` (from `.env.example`)
 
@@ -60,6 +69,12 @@ Use these default paths so prompts and implementations stay consistent:
   - browser APIs
   - complex event handling
 - Avoid moving entire trees to client rendering without clear reason.
+
+## Form State and Validation Boundary
+- Prefer React Hook Form inside `src/components/features/*` or focused client-only child components.
+- Use `@hookform/resolvers` when binding shared schemas to form validation.
+- Keep canonical validation rules in `src/lib/schemas/*`; client-side validation is for UX, not trust.
+- Route handlers and services must still validate and enforce server-side rules.
 
 ## API Request Flow (Target Pattern)
 1. `route.ts` parses request and applies auth checks.

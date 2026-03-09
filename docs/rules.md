@@ -38,7 +38,7 @@ This file defines mandatory rules for implementation.
 - Env variable changes: update `.env.example`.
 
 ## Empty Directory Policy
-- Use minimal `index.ts` placeholder modules to preserve scaffold directories.
+- Create folders when the feature is implemented instead of preserving broad placeholder scaffolding.
 - Do not keep empty `.ts` or `.tsx` files only to force directory tracking.
 
 ## Safety Rules

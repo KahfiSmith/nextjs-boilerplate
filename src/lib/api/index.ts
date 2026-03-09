@@ -1,3 +1,2 @@
 export { apiEndpoints } from "@/lib/api/endpoints";
 export { ApiError, fetchJson } from "@/lib/api/fetcher";
-export { getHealthStatus } from "@/lib/api/health.client";

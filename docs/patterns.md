@@ -35,34 +35,41 @@ This document contains reusable implementation recipes for common changes in thi
 5. Handle loading, success, and error states explicitly.
 6. Do not expose raw internal errors in UI.
 
-## Pattern E: TanStack Query Data Fetching
+## Pattern E: Server-First Read Path
+1. Start with a Server Component for read-only UI.
+2. Call `src/lib/services/*` directly when the data is already owned by this app and no client revalidation is needed.
+3. Keep the API route for external consumers or independent HTTP checks if needed.
+4. Add a client component only when interactivity, browser APIs, or live client re-fetching is required.
+
+## Pattern F: TanStack Query Data Fetching
 1. Put the raw fetch helper in `src/lib/api/<resource>.client.ts`.
 2. Parse the response with a Zod schema from `src/lib/schemas/*`.
 3. Wrap the request with a hook in `src/hooks/queries/use-<resource>-query.ts`.
 4. Keep query keys centralized in `src/hooks/queries/query-keys.ts`.
 5. Consume the hook from feature components, not from UI primitives.
+6. Skip this pattern for simple server-rendered reads that do not benefit from client caching.
 
-## Pattern F: Auth-Protected Area
+## Pattern G: Auth-Protected Area
 1. Choose protection boundary: middleware, route handler, or page-level guard.
-2. Keep auth providers and config synchronized in `src/providers` and `src/lib/auth`.
+2. Keep auth providers and config synchronized in `src/providers` and `src/lib/auth` when a client provider is actually mounted.
 3. For sensitive data, prefer server boundary fetching.
 4. Test unauthorized, authorized, and expired-session cases.
 5. If credentials are managed by external backend (Go/Express/Nest), call backend API from `services -> repositories -> lib/clients` rather than embedding auth logic in route handlers.
 6. Select `AUTH_STRATEGY` first (`nextauth`, `external`, `none`) and keep middleware/login behavior aligned with that strategy.
 
-## Pattern G: Add a UI Primitive
+## Pattern H: Add a UI Primitive
 1. Add component in `src/components/ui/*`.
 2. Use `cn` helper (`src/lib/utils/cn.ts`) for class merging.
 3. Use `cva` variant pattern if component has multiple variants.
 4. Keep domain logic out of primitive UI components.
 
-## Pattern H: Add New Config or Env Usage
+## Pattern I: Add New Config or Env Usage
 1. Add key in the relevant config module (`src/config/*`).
 2. Validate env availability at startup or runtime as needed.
 3. Update env notes in active docs (`docs/architecture.md` and/or `docs/patterns.md`).
 4. Add verification notes for missing-env behavior.
 
-## Pattern I: Database or Persistence Change
+## Pattern J: Database or Persistence Change
 1. Apply data-layer changes in repository and service boundaries.
 2. Keep API behavior synchronized if request/response or side effects change.
 3. Update `docs/database.md` with policy/workflow impact.

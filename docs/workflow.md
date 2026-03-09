@@ -3,7 +3,11 @@
 This file is a reference flow for implementing features without adding ad-hoc structure.
 
 ## End-to-End Layer Flow
+Default:
 `api route -> service -> repository -> schema/types -> client fetcher -> TanStack Query hook -> feature component`
+
+Server-first read path:
+`page/server component -> service -> repository/schema/types`
 
 ## Default Path Map
 - Endpoint HTTP: `src/app/api/<resource>/route.ts`
@@ -22,7 +26,9 @@ This file is a reference flow for implementing features without adding ad-hoc st
 2. Implement repository (data source contract).
 3. Implement service (business rules and orchestration).
 4. Implement API route handler (HTTP mapping and status codes).
-5. Implement frontend API caller + query hook.
+5. Choose UI data path:
+   - server component + direct service call for simple read-only flows
+   - frontend API caller + query hook for client-side fetching and cache use cases
 6. Build UI feature using reusable child components.
 7. Verify and sync docs.
 

@@ -24,9 +24,9 @@ This document defines architecture boundaries that must be preserved.
 - `src/components/features/*`
   - Feature and use-case level UI composition.
 - `src/providers/*`
-  - App-level providers (auth, theme, state).
+  - Optional client providers. Mount them narrowly where needed instead of wrapping the entire app by default.
 - `src/hooks/*`
-  - Reusable React hooks and TanStack Query wrappers for client-side state and fetching.
+  - Reusable client-side hooks. Use them when browser state or shared client fetching is actually needed.
 - `src/lib/api/*`
   - Shared fetch utilities and internal API clients for frontend data access.
 - `src/lib/services/*`
@@ -41,13 +41,14 @@ This document defines architecture boundaries that must be preserved.
   - App configuration, env access, constants.
 
 ## Dependency Direction
-`app/page/api -> features -> hooks -> lib(api/services/repositories/clients) -> schemas/types/utils`
+`app/page/api -> features -> hooks(optional) -> lib(api/services/repositories/clients) -> schemas/types/utils`
 
 Rules:
 - `components/ui` must not import service or repository modules.
 - Hooks can depend on `lib/api`, but business rules should stay in services.
 - Route handlers should not contain complex domain logic.
 - Service layer must not depend on UI component modules.
+- For simple same-app reads, prefer a server component calling a service directly over adding a client fetch + query layer.
 
 ## Implementation Path Map
 Use these default paths so prompts and implementations stay consistent:
@@ -58,7 +59,7 @@ Use these default paths so prompts and implementations stay consistent:
 - Shared types/DTO: `src/types/<resource>.types.ts`
 - Internal API caller (frontend fetch): `src/lib/api/<resource>.client.ts`
 - External API clients (Stripe/OpenAI/etc): `src/lib/clients/<provider>.client.ts`
-- UI data hooks: `src/hooks/queries/use-<resource>-query.ts`
+- UI data hooks: `src/hooks/queries/use-<resource>-query.ts` (only when client-side fetching is justified)
 - Feature components: `src/components/features/<resource>/...`
 - Env mapping: `src/config/env.ts` + `.env.local` (from `.env.example`)
 
@@ -69,6 +70,7 @@ Use these default paths so prompts and implementations stay consistent:
   - browser APIs
   - complex event handling
 - Avoid moving entire trees to client rendering without clear reason.
+- Avoid global client provider wrappers when only a small subtree needs client state.
 
 ## Form State and Validation Boundary
 - Prefer React Hook Form inside `src/components/features/*` or focused client-only child components.

@@ -1,8 +1,8 @@
 import { env } from "@/config/env";
 import { postExternalAuthLogin } from "@/lib/clients/auth.client";
+import type { ExternalAuthResponse } from "@/lib/schemas";
 import type {
   AuthUser,
-  ExternalAuthUserPayload,
   LoginCredentials,
 } from "@/types/auth.types";
 
@@ -33,16 +33,11 @@ export async function findDemoUserByCredentials(
 const readRole = (role: string | undefined): AuthUser["role"] =>
   role === "admin" ? "admin" : "user";
 
-const mapExternalUserPayload = (input: unknown): AuthUser | null => {
-  if (!input || typeof input !== "object") {
-    return null;
-  }
-
-  const payload = input as Record<string, unknown>;
+const mapExternalUserPayload = (payload: ExternalAuthResponse): AuthUser | null => {
   const candidate =
-    (payload.user as ExternalAuthUserPayload | undefined) ??
-    (payload.data as { user?: ExternalAuthUserPayload } | undefined)?.user ??
-    (payload as ExternalAuthUserPayload);
+    payload.user ??
+    payload.data?.user ??
+    payload;
 
   const id = candidate?.id ?? candidate?.userId;
   const email = candidate?.email;
@@ -67,5 +62,5 @@ export async function findExternalUserByCredentials(
   }
 
   const response = await postExternalAuthLogin(credentials);
-  return mapExternalUserPayload(response);
+  return response ? mapExternalUserPayload(response) : null;
 }

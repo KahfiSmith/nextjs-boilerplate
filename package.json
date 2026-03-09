@@ -3,19 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "type-check": "tsc --noEmit",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "db:push": "prisma db push",
-    "db:studio": "prisma studio",
-    "db:seed": "tsx src/lib/db/seed.ts"
+    "dev": "node ./node_modules/next/dist/bin/next dev --turbopack",
+    "build": "node ./node_modules/next/dist/bin/next build",
+    "start": "node ./node_modules/next/dist/bin/next start",
+    "lint": "node ./node_modules/eslint/bin/eslint.js src \"*.ts\" \"*.mjs\"",
+    "lint:fix": "node ./node_modules/eslint/bin/eslint.js src \"*.ts\" \"*.mjs\" --fix",
+    "type-check": "node ./node_modules/typescript/bin/tsc --noEmit",
+    "test": "node ./node_modules/jest/bin/jest.js",
+    "test:watch": "node ./node_modules/jest/bin/jest.js --watch"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-slot": "^1.2.4",
+    "@tanstack/react-query": "^5.90.21",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.34.2",
@@ -24,7 +24,9 @@
     "next-auth": "^4.24.13",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "tailwind-merge": "^3.5.0"
+    "react-hook-form": "^7.71.2",
+    "tailwind-merge": "^3.5.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",

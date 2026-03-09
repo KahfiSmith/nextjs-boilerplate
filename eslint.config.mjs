@@ -28,9 +28,11 @@ const eslintConfig = [
     // Ignore patterns
     ignores: [
       "node_modules/**",
+      ".pnpm-store/**",
       ".next/**",
       "dist/**",
       "build/**",
+      ".git/**",
     ],
   },
 ];

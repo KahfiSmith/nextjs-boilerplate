@@ -1,57 +1,73 @@
 "use client";
 
-import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { Button } from "@/components/ui";
+import { loginCredentialsSchema } from "@/lib/schemas";
 
 interface LoginFormProps {
   authStrategy: "nextauth" | "external" | "none";
 }
+
+type LoginFormValues = z.input<typeof loginCredentialsSchema>;
 
 export function LoginForm({ authStrategy }: LoginFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/";
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    setError,
+    clearErrors,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginCredentialsSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const onSubmit = handleSubmit(async (values) => {
     if (authStrategy !== "nextauth") {
       setError(
-        authStrategy === "external"
-          ? "Login is handled directly by external backend in this mode."
-          : "Authentication is disabled in this mode."
+        "root",
+        {
+          message:
+            authStrategy === "external"
+              ? "Login is handled directly by external backend in this mode."
+              : "Authentication is disabled in this mode.",
+        },
       );
       return;
     }
 
-    setError(null);
-    setIsLoading(true);
+    clearErrors("root");
 
     const result = await signIn("credentials", {
-      email,
-      password,
+      email: values.email,
+      password: values.password,
       redirect: false,
       callbackUrl,
     });
 
     if (!result || result.error) {
-      setError("Invalid email or password.");
-      setIsLoading(false);
+      setError("root", {
+        message: "Invalid email or password.",
+      });
       return;
     }
 
     router.push(callbackUrl);
     router.refresh();
-  };
+  });
 
   return (
     <form onSubmit={onSubmit} className="w-full max-w-sm space-y-4 rounded-lg border p-6">
@@ -74,12 +90,12 @@ export function LoginForm({ authStrategy }: LoginFormProps) {
         <input
           id="email"
           type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
+          {...register("email")}
           className="h-9 w-full rounded-md border bg-background px-3 text-sm"
           placeholder="you@example.com"
-          required
+          autoComplete="email"
         />
+        {errors.email ? <p className="text-sm text-destructive">{errors.email.message}</p> : null}
       </div>
 
       <div className="space-y-2">
@@ -89,22 +105,24 @@ export function LoginForm({ authStrategy }: LoginFormProps) {
         <input
           id="password"
           type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
+          {...register("password")}
           className="h-9 w-full rounded-md border bg-background px-3 text-sm"
           placeholder="your-password"
-          required
+          autoComplete="current-password"
         />
+        {errors.password ? (
+          <p className="text-sm text-destructive">{errors.password.message}</p>
+        ) : null}
       </div>
 
-      {error ? <p className="text-sm text-destructive">{error}</p> : null}
+      {errors.root ? <p className="text-sm text-destructive">{errors.root.message}</p> : null}
 
       <Button
         type="submit"
         className="w-full"
-        disabled={isLoading || authStrategy !== "nextauth"}
+        disabled={isSubmitting || authStrategy !== "nextauth"}
       >
-        {isLoading ? "Signing in..." : "Sign in"}
+        {isSubmitting ? "Signing in..." : "Sign in"}
       </Button>
 
       <p className="text-sm text-muted-foreground">

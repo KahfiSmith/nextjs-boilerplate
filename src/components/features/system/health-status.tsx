@@ -1,20 +1,12 @@
-"use client";
+import { getHealthStatus } from "@/lib/services/health.service";
 
-import { useHealthQuery } from "@/hooks";
-
-export function HealthStatus() {
-  const { data, error, isPending } = useHealthQuery();
+export async function HealthStatus() {
+  const status = await getHealthStatus();
 
   return (
     <div className="rounded-md border bg-muted/50 p-3 text-sm text-muted-foreground">
       <p className="font-medium text-foreground">API Health</p>
-      <p className="mt-1">
-        {isPending
-          ? "Checking /api/health..."
-          : error
-            ? "Unable to reach the health endpoint."
-            : `Status: ${data}`}
-      </p>
+      <p className="mt-1">{`Status: ${status}`}</p>
     </div>
   );
 }

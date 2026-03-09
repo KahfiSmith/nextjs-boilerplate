@@ -3,22 +3,17 @@ import {
   findExternalUserByCredentials,
 } from "@/lib/repositories/auth.repository";
 import { env } from "@/config/env";
+import { loginCredentialsSchema } from "@/lib/schemas";
 import type { AuthUser, LoginCredentials } from "@/types/auth.types";
 
-const sanitize = (value: string): string => value.trim();
-
 function validateCredentials(credentials: LoginCredentials): LoginCredentials | null {
-  const email = sanitize(credentials.email);
-  const password = sanitize(credentials.password);
+  const result = loginCredentialsSchema.safeParse(credentials);
 
-  if (!email || !password) {
+  if (!result.success) {
     return null;
   }
 
-  return {
-    email,
-    password,
-  };
+  return result.data;
 }
 
 export async function authenticateWithCredentials(

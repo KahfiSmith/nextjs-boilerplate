@@ -1,20 +1,26 @@
+const withApiPath = (path: string): string =>
+  `/api/${path.replace(/^\/+/, "")}`;
+
 const withId = (basePath: string, id: string | number): string =>
   `${basePath}/${id}`;
 
+const withAuthPath = (path: string): string =>
+  `${withApiPath("auth")}/${path.replace(/^\/+/, "")}`;
+
 export const apiEndpoints = {
+  health: withApiPath("health"),
   auth: {
-    login: "/api/auth/login",
-    register: "/api/auth/register",
-    me: "/api/auth/me",
-    refresh: "/api/auth/refresh",
-  },
-  users: {
-    list: "/api/users",
-    detail: (id: string | number) => withId("/api/users", id),
+    base: withApiPath("auth"),
+    nextAuth: {
+      csrf: withAuthPath("csrf"),
+      session: withAuthPath("session"),
+      signIn: withAuthPath("signin"),
+      signOut: withAuthPath("signout"),
+    },
   },
   resources: {
-    list: (resource: string) => `/api/${resource}`,
+    list: (resource: string) => withApiPath(resource),
     detail: (resource: string, id: string | number) =>
-      withId(`/api/${resource}`, id),
+      withId(withApiPath(resource), id),
   },
 };

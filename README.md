@@ -1,32 +1,57 @@
 # Next.js Boilerplate
 
-Opinionated Next.js 16 App Router starter with TypeScript strict mode, Tailwind CSS v4, a shadcn-style UI layer, and a layered auth-ready architecture.
+Opinionated Next.js App Router starter for teams that want strict TypeScript, a layered frontend architecture, and an auth-ready foundation without starting from zero.
 
-## What Is Included
+## Overview
 
-- Next.js `16.1.6` with App Router
-- React `19`
-- TypeScript `strict`
-- Tailwind CSS `v4`
-- TanStack Query
-- React Hook Form
-- `@hookform/resolvers`
-- Zod
-- ESLint + Jest
-- Reusable UI primitives in `src/components/ui`
-- Feature composition in `src/components/features`
-- Service and repository layers for auth flow
-- Optional auth runtime controlled by env:
+This repository gives you a production-oriented frontend baseline with:
+
+- App Router-first structure for pages and APIs
+- Strictly typed React and server code
+- Tailwind CSS v4 with reusable UI primitives
+- Auth-ready flows with switchable runtime strategies
+- Clear service and repository boundaries for future scale
+- Basic testing and linting already wired
+
+## Tech Stack
+
+| Category | Stack |
+| --- | --- |
+| Framework | Next.js `16.1.6` |
+| UI Runtime | React `19` / React DOM `19` |
+| Language | TypeScript `strict` |
+| Styling | Tailwind CSS `v4` |
+| UI Utilities | `clsx`, `tailwind-merge`, `class-variance-authority`, `lucide-react`, `framer-motion` |
+| Forms | React Hook Form, `@hookform/resolvers` |
+| Validation | Zod |
+| Data Fetching | TanStack Query |
+| Auth | NextAuth (`next-auth`) with external-backend or demo credential modes |
+| Testing | Jest |
+| Linting | ESLint |
+
+## Features
+
+- Auth-ready setup with three runtime strategies:
   - `nextauth`
   - `external`
   - `none`
+- Credentials login page at `/auth/login`
+- Registration guidance page at `/auth/register`
+- Health check endpoint at `/api/health`
+- Layered structure across route handlers, services, repositories, schemas, and UI
+- Reusable primitive components in `src/components/ui`
+- Feature-scoped composition in `src/components/features`
+- App-level loading, error, and not-found states already scaffolded
+- API contract and architecture docs kept in `docs/`
 
-## Requirements
+## Installation
+
+### Requirements
 
 - Node.js `20+`
 - pnpm `10+`
 
-## Quick Start
+### Setup
 
 ```bash
 pnpm install
@@ -36,15 +61,52 @@ pnpm dev
 
 Open `http://localhost:3000`.
 
-For Windows PowerShell:
+Windows PowerShell:
 
 ```powershell
 Copy-Item .env.example .env.local
+pnpm dev
 ```
 
-## Environment
+## Usage Guide
 
-Core env values from `.env.example`:
+### Run locally
+
+```bash
+pnpm dev
+```
+
+The dev server runs with Turbopack.
+
+### Build for production
+
+```bash
+pnpm build
+pnpm start
+```
+
+### Run quality checks
+
+```bash
+pnpm lint
+pnpm type-check
+pnpm test
+```
+
+### Explore the current app surface
+
+- `/` shows the current auth-aware home screen
+- `/auth/login` provides credential sign-in
+- `/auth/register` explains the registration flow
+- `/api/health` returns:
+
+```json
+{ "data": { "status": "ok" } }
+```
+
+## Environment Configuration
+
+Core values from `.env.example`:
 
 ```env
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -52,12 +114,13 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 AUTH_STRATEGY=nextauth
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=change-me-to-a-long-random-secret
-
+# Used only when AUTH_STRATEGY=nextauth
 AUTH_MODE=external
 BACKEND_API_URL=http://localhost:8080
 BACKEND_AUTH_LOGIN_PATH=/api/auth/login
 BACKEND_AUTH_TIMEOUT_MS=8000
 
+# Demo mode fallback (used only when AUTH_STRATEGY=nextauth and AUTH_MODE=demo)
 AUTH_DEMO_NAME=Demo User
 AUTH_DEMO_EMAIL=demo@example.com
 AUTH_DEMO_PASSWORD=demo12345
@@ -65,15 +128,15 @@ AUTH_DEMO_PASSWORD=demo12345
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/nextjs_boilerplate
 ```
 
-Behavior:
+### Auth behavior
 
-- `AUTH_STRATEGY=nextauth`: enables NextAuth route handling and middleware protection for `/`
-- `AUTH_STRATEGY=external`: disables NextAuth runtime behavior in middleware; frontend shows external-backend guidance
-- `AUTH_STRATEGY=none`: disables auth checks
-- `AUTH_MODE=external`: credential verification is delegated to `BACKEND_API_URL + BACKEND_AUTH_LOGIN_PATH`
-- `AUTH_MODE=demo`: credentials are verified against demo env values
+- `AUTH_STRATEGY=nextauth` enables NextAuth route handling and protected runtime behavior
+- `AUTH_STRATEGY=external` disables NextAuth runtime behavior and assumes auth is handled by an external backend
+- `AUTH_STRATEGY=none` disables auth checks entirely
+- `AUTH_MODE=external` delegates credential verification to `BACKEND_API_URL + BACKEND_AUTH_LOGIN_PATH`
+- `AUTH_MODE=demo` verifies credentials against demo values in env
 
-## Scripts
+## Available Scripts
 
 ```bash
 pnpm dev
@@ -86,42 +149,18 @@ pnpm test
 pnpm test:watch
 ```
 
-Notes:
-
-- `pnpm dev` runs Next.js with Turbopack.
-- Database tooling is not wired by default. Add Prisma or your chosen persistence layer when the project actually needs it.
-
-## Active App Surface
-
-Routes currently present:
-
-- `/` home page showing current auth status
-- `/auth/login` credentials sign-in page
-- `/auth/register` backend-registration guidance page
-- `/api/health` health check endpoint
-- `/api/auth/[...nextauth]` NextAuth route entrypoint for `nextauth` strategy
-
-Health response:
-
-```json
-{ "data": { "status": "ok" } }
-```
-
 ## Project Structure
 
 ```text
 .
 ├─ docs/
 ├─ public/
-│  ├─ fonts/
-│  ├─ icons/
-│  └─ images/
 ├─ src/
 │  ├─ __tests__/
 │  ├─ app/
 │  │  ├─ (auth)/
 │  │  ├─ (public)/
-│  │  ├─ api/
+│  │  └─ api/
 │  ├─ components/
 │  │  ├─ features/
 │  │  └─ ui/
@@ -141,35 +180,20 @@ Health response:
 └─ package.json
 ```
 
-Architecture rule of thumb:
+### Responsibility guide
 
 - `src/app` and `src/app/api`: route boundaries only
-- `src/app/(public)` and `src/app/(auth)`: route-group organization by intent without URL changes
-- add groups such as `src/app/(dashboard)` when the signed-in app surface grows
-- `src/components/ui`: reusable primitives
-- `src/providers`: app-level client providers
-- `src/components/features`: use-case UI
-- `src/hooks`: reusable React hooks and TanStack Query wrappers
-- `src/lib/api`: shared fetchers and internal API clients
+- `src/components/ui`: reusable presentation primitives
+- `src/components/features`: use-case UI composition
+- `src/hooks`: reusable client hooks and query helpers
 - `src/lib/services`: business logic
-- `src/lib/repositories`: persistence or external integration
-- `src/lib/schemas`: Zod schemas for request and response validation
-- `src/components/features`: preferred place for client-side form composition with React Hook Form
+- `src/lib/repositories`: persistence and external integration
+- `src/lib/schemas`: request and response validation
 - `src/lib/clients`: external API callers
-
-## Verification
-
-Minimum recommended checks:
-
-```bash
-pnpm lint
-pnpm type-check
-pnpm test
-```
 
 ## Documentation
 
-Start here for project rules and implementation constraints:
+Use these docs as the source of truth when extending the boilerplate:
 
 - `docs/rules.md`
 - `docs/coding-standards.md`
@@ -179,9 +203,9 @@ Start here for project rules and implementation constraints:
 - `docs/patterns.md`
 - `docs/workflow.md`
 
-## Current Caveats
+## Notes
 
 - Database tooling is intentionally not installed by default.
-- `next-auth` is installed and wired for the `nextauth` strategy only; `external` and `none` intentionally change runtime behavior through env configuration.
-- `src/hooks` is kept as a stable convention for reusable React hooks, including TanStack Query hooks.
-- React Hook Form and `@hookform/resolvers` are installed for feature-level form state and schema-backed validation.
+- `next-auth` is wired only for the `nextauth` strategy.
+- `external` and `none` are runtime configuration modes, not separate app builds.
+- This boilerplate is optimized for incremental growth, not maximum abstraction on day one.

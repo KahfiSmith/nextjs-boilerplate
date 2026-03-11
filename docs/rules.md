@@ -39,7 +39,8 @@ This file defines mandatory rules for implementation.
 
 ## Empty Directory Policy
 - Create folders when the feature is implemented instead of preserving broad placeholder scaffolding.
-- Do not keep empty `.ts` or `.tsx` files only to force directory tracking.
+- Minimal `index.ts` placeholder modules are allowed only for intentionally reserved top-level directories such as `src/hooks` or `src/providers`.
+- Do not keep arbitrary empty `.ts` or `.tsx` files only to force directory tracking.
 
 ## Safety Rules
 - Do not revert unrelated user changes.

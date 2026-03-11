@@ -28,16 +28,16 @@ Every endpoint change must be synchronized here.
 - Protected endpoints must apply consistent auth checks (middleware, route handler, or service based on active design).
 - Do not expose internal auth details in client-facing errors.
 - Auth behavior is controlled by `AUTH_STRATEGY`:
-  - `nextauth`: enable NextAuth route + middleware checks
-  - `external`: disable NextAuth route, use external backend-managed auth flow
-  - `none`: disable auth checks
+  - `nextauth`: enable the NextAuth route and middleware checks for `/`
+  - `external`: keep the NextAuth route file mounted, but return `404` with `{ "error": "NextAuth is disabled." }` and use external backend-managed auth flow
+  - `none`: disable auth checks and return `404` with `{ "error": "NextAuth is disabled." }` from the NextAuth route
 
 ## Endpoint Registry
 Use this table as a quick index of active endpoints.
 
 | Method | Path | Auth | Owner Layer | Notes |
 | --- | --- | --- | --- | --- |
-| `GET`,`POST` | `/api/auth/[...nextauth]` | Public (entrypoint), internally validated by Auth.js | Handler + service + repository + external client | NextAuth credentials flow delegates credential verification to external backend API |
+| `GET`,`POST` | `/api/auth/[...nextauth]` | Public when enabled; returns `404` when `AUTH_STRATEGY != nextauth` | Handler + auth config + service + repository + external client | NextAuth credentials flow delegates credential verification to external backend API or demo mode |
 | `GET` | `/api/health` | Public | Handler | Health check endpoint |
 
 ### GET/POST /api/auth/[...nextauth]
@@ -65,6 +65,10 @@ Response
 { "url": "..." }
 ```
 or session payload depending on sub-route (`/session`).
+- 404 when disabled:
+```json
+{ "error": "NextAuth is disabled." }
+```
 - 401/4xx:
 ```json
 { "error": "CredentialsSignin" }
@@ -75,6 +79,7 @@ Notes
 - Validation rules: `authenticateWithCredentials` sanitizes and validates required fields before repository lookup.
 - External auth source: when `AUTH_MODE=external`, repository calls `${BACKEND_API_URL}${BACKEND_AUTH_LOGIN_PATH}` for credential verification.
 - Side effects: creates and rotates auth session cookies when login succeeds.
+- Middleware note: current `middleware.ts` matcher protects `/` only.
 
 ### GET /api/health
 - Handler: `src/app/api/health/route.ts`

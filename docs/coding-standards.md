@@ -21,7 +21,7 @@ This file defines coding standards to keep implementation quality consistent.
 ## Components
 - `src/components/ui/*`: UI primitives only, no domain logic.
 - `src/components/features/*`: feature and use-case composition.
-- `src/providers/*`: optional client providers such as auth or theme wrappers; scope them to the smallest subtree that needs them.
+- `src/providers/*`: optional client providers such as auth or theme wrappers; this directory is currently scaffold-only, and providers should be scoped to the smallest subtree that needs them.
 - Use `"use client"` only when browser interaction or local state is required.
 - If a component becomes too large, extract reusable child components instead of keeping one monolithic file.
 - Prefer feature components or focused client children for form state management with `react-hook-form`.
@@ -29,7 +29,7 @@ This file defines coding standards to keep implementation quality consistent.
 
 ## Hooks
 - `src/hooks/*`: reusable React hooks only.
-- Put TanStack Query hooks in `src/hooks/queries/*` when client-side cache or revalidation is actually needed.
+- Put TanStack Query hooks in `src/hooks/queries/*` when client-side cache or revalidation is actually needed; the current repo does not have active query hooks yet.
 - Do not move business rules into hooks; keep domain logic in `src/lib/services/*` and data mapping in repositories or clients.
 
 ## Route Organization

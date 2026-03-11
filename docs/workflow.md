@@ -3,8 +3,11 @@
 This file is a reference flow for implementing features without adding ad-hoc structure.
 
 ## End-to-End Layer Flow
-Default:
-`api route -> service -> repository -> schema/types -> client fetcher -> TanStack Query hook -> feature component`
+Current default:
+`page/server component or api route -> service -> repository -> schema/types`
+
+Optional client-fetch path:
+`client component -> lib/api fetcher or client -> hook(optional) -> feature component`
 
 Server-first read path:
 `page/server component -> service -> repository/schema/types`
@@ -17,7 +20,7 @@ Server-first read path:
 - Shared types/DTO: `src/types/<resource>.types.ts`
 - Internal API caller (frontend fetch): `src/lib/api/<resource>.client.ts`
 - External API client (Stripe/OpenAI/etc): `src/lib/clients/<provider>.client.ts`
-- UI data hook: `src/hooks/queries/use-<resource>-query.ts`
+- UI data hook: `src/hooks/queries/use-<resource>-query.ts` (optional; not used by active flows today)
 - Feature components: `src/components/features/<resource>/...`
 - Env mapping: `src/config/env.ts` + `.env.local` (from `.env.example`)
 
@@ -28,7 +31,7 @@ Server-first read path:
 4. Implement API route handler (HTTP mapping and status codes).
 5. Choose UI data path:
    - server component + direct service call for simple read-only flows
-   - frontend API caller + query hook for client-side fetching and cache use cases
+   - frontend API caller + optional query hook for client-side fetching and cache use cases
 6. Build UI feature using reusable child components.
 7. Verify and sync docs.
 

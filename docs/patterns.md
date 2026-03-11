@@ -41,11 +41,11 @@ This document contains reusable implementation recipes for common changes in thi
 3. Keep the API route for external consumers or independent HTTP checks if needed.
 4. Add a client component only when interactivity, browser APIs, or live client re-fetching is required.
 
-## Pattern F: TanStack Query Data Fetching
+## Pattern F: Optional TanStack Query Data Fetching
 1. Put the raw fetch helper in `src/lib/api/<resource>.client.ts`.
 2. Parse the response with a Zod schema from `src/lib/schemas/*`.
 3. Wrap the request with a hook in `src/hooks/queries/use-<resource>-query.ts`.
-4. Keep query keys centralized in `src/hooks/queries/query-keys.ts`.
+4. Add centralized query keys only when multiple client queries exist; do not assume `src/hooks/queries/query-keys.ts` already exists.
 5. Consume the hook from feature components, not from UI primitives.
 6. Skip this pattern for simple server-rendered reads that do not benefit from client caching.
 
@@ -55,7 +55,7 @@ This document contains reusable implementation recipes for common changes in thi
 3. For sensitive data, prefer server boundary fetching.
 4. Test unauthorized, authorized, and expired-session cases.
 5. If credentials are managed by external backend (Go/Express/Nest), call backend API from `services -> repositories -> lib/clients` rather than embedding auth logic in route handlers.
-6. Select `AUTH_STRATEGY` first (`nextauth`, `external`, `none`) and keep middleware/login behavior aligned with that strategy.
+6. Select `AUTH_STRATEGY` first (`nextauth`, `external`, `none`) and keep middleware/login behavior aligned with that strategy. In the current repo, middleware protects `/` only.
 
 ## Pattern H: Add a UI Primitive
 1. Add component in `src/components/ui/*`.

@@ -24,7 +24,7 @@ This repository gives you a production-oriented frontend baseline with:
 | UI Utilities | `clsx`, `tailwind-merge`, `class-variance-authority`, `lucide-react`, `framer-motion` |
 | Forms | React Hook Form, `@hookform/resolvers` |
 | Validation | Zod |
-| Data Fetching | TanStack Query |
+| Data Fetching | TanStack Query (installed, not wired into active flows yet) |
 | Auth | NextAuth (`next-auth`) with external-backend or demo credential modes |
 | Testing | Jest |
 | Linting | ESLint |
@@ -35,6 +35,7 @@ This repository gives you a production-oriented frontend baseline with:
   - `nextauth`
   - `external`
   - `none`
+- Frontend-managed sign-in is active only when `AUTH_STRATEGY=nextauth`
 - Credentials login page at `/auth/login`
 - Registration guidance page at `/auth/register`
 - Health check endpoint at `/api/health`
@@ -96,7 +97,7 @@ pnpm test
 ### Explore the current app surface
 
 - `/` shows the current auth-aware home screen
-- `/auth/login` provides credential sign-in
+- `/auth/login` provides credential sign-in only when `AUTH_STRATEGY=nextauth`
 - `/auth/register` explains the registration flow
 - `/api/health` returns:
 
@@ -130,9 +131,9 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/nextjs_boilerplate
 
 ### Auth behavior
 
-- `AUTH_STRATEGY=nextauth` enables NextAuth route handling and protected runtime behavior
-- `AUTH_STRATEGY=external` disables NextAuth runtime behavior and assumes auth is handled by an external backend
-- `AUTH_STRATEGY=none` disables auth checks entirely
+- `AUTH_STRATEGY=nextauth` enables NextAuth route handling, the login form submit flow, and middleware protection for `/`
+- `AUTH_STRATEGY=external` disables the NextAuth runtime adapter in this app; `/api/auth/[...nextauth]` still exists but returns `404` with `{ "error": "NextAuth is disabled." }`
+- `AUTH_STRATEGY=none` disables auth checks and the NextAuth adapter in this app
 - `AUTH_MODE=external` delegates credential verification to `BACKEND_API_URL + BACKEND_AUTH_LOGIN_PATH`
 - `AUTH_MODE=demo` verifies credentials against demo values in env
 
@@ -185,11 +186,12 @@ pnpm test:watch
 - `src/app` and `src/app/api`: route boundaries only
 - `src/components/ui`: reusable presentation primitives
 - `src/components/features`: use-case UI composition
-- `src/hooks`: reusable client hooks and query helpers
+- `src/hooks`: reserved for reusable client hooks and query helpers when a real client data flow is introduced
 - `src/lib/services`: business logic
 - `src/lib/repositories`: persistence and external integration
 - `src/lib/schemas`: request and response validation
 - `src/lib/clients`: external API callers
+- `src/providers`: reserved for narrowly-scoped client providers when they are actually needed
 
 ## Documentation
 
@@ -207,5 +209,7 @@ Use these docs as the source of truth when extending the boilerplate:
 
 - Database tooling is intentionally not installed by default.
 - `next-auth` is wired only for the `nextauth` strategy.
+- The current middleware matcher protects only `/` when `AUTH_STRATEGY=nextauth`.
+- `src/hooks/queries` and `src/providers` are scaffolded, but active runtime flows currently use server components plus direct service calls.
 - `external` and `none` are runtime configuration modes, not separate app builds.
 - This boilerplate is optimized for incremental growth, not maximum abstraction on day one.

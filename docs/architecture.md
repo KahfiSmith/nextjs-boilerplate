@@ -7,7 +7,7 @@ This document defines architecture boundaries that must be preserved.
 - React 19
 - TypeScript strict
 - Tailwind CSS v4
-- TanStack Query
+- TanStack Query (installed, optional; not wired into active runtime flows yet)
 - React Hook Form
 - `@hookform/resolvers`
 - Zod
@@ -24,9 +24,9 @@ This document defines architecture boundaries that must be preserved.
 - `src/components/features/*`
   - Feature and use-case level UI composition.
 - `src/providers/*`
-  - Optional client providers. Mount them narrowly where needed instead of wrapping the entire app by default.
+  - Optional client providers. In the current repo this directory is scaffolded only; mount providers narrowly when they are actually introduced.
 - `src/hooks/*`
-  - Reusable client-side hooks. Use them when browser state or shared client fetching is actually needed.
+  - Reusable client-side hooks. In the current repo this directory is scaffolded only; add hooks when browser state or shared client fetching is actually needed.
 - `src/lib/api/*`
   - Shared fetch utilities and internal API clients for frontend data access.
 - `src/lib/services/*`
@@ -41,7 +41,7 @@ This document defines architecture boundaries that must be preserved.
   - App configuration, env access, constants.
 
 ## Dependency Direction
-`app/page/api -> features -> hooks(optional) -> lib(api/services/repositories/clients) -> schemas/types/utils`
+`app/page/api -> features -> hooks(optional) -> lib(api/services/repositories/clients) -> schemas/types/utils/config`
 
 Rules:
 - `components/ui` must not import service or repository modules.
@@ -59,7 +59,7 @@ Use these default paths so prompts and implementations stay consistent:
 - Shared types/DTO: `src/types/<resource>.types.ts`
 - Internal API caller (frontend fetch): `src/lib/api/<resource>.client.ts`
 - External API clients (Stripe/OpenAI/etc): `src/lib/clients/<provider>.client.ts`
-- UI data hooks: `src/hooks/queries/use-<resource>-query.ts` (only when client-side fetching is justified)
+- UI data hooks: `src/hooks/queries/use-<resource>-query.ts` (only when client-side fetching is justified; not used by active flows today)
 - Feature components: `src/components/features/<resource>/...`
 - Env mapping: `src/config/env.ts` + `.env.local` (from `.env.example`)
 
@@ -88,8 +88,8 @@ Use these default paths so prompts and implementations stay consistent:
 ## Auth Boundary (External Backend)
 - `AUTH_STRATEGY` controls runtime auth boundary:
   - `nextauth`: use `src/app/api/auth/[...nextauth]/route.ts`
-  - `external`: disable NextAuth route behavior and delegate auth to backend
-  - `none`: disable auth checks
+  - `external`: keep the route file present but return `404` from the NextAuth adapter endpoint and delegate auth to backend
+  - `none`: disable auth checks and return `404` from the NextAuth adapter endpoint
 - Keep `src/app/api/auth/[...nextauth]/route.ts` only as NextAuth adapter entrypoint.
 - Purpose of this route:
   - session cookie lifecycle (`signin`, `signout`, `session`, `csrf`)
@@ -99,6 +99,7 @@ Use these default paths so prompts and implementations stay consistent:
   - `src/lib/repositories/auth.repository.ts`
   - `src/lib/clients/auth.client.ts`
 - For Go/Express/Nest backends, this repository should not duplicate backend business logic; only call backend auth endpoints and map responses.
+- Current middleware scope: `middleware.ts` matches `/` only, so broader protected-area rules must be added explicitly if the app grows beyond the current home-page gate.
 
 ## Error Handling Discipline
 - Define domain errors in service or repository layers.

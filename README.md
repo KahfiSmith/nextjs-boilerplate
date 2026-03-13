@@ -24,7 +24,7 @@ This repository gives you a production-oriented frontend baseline with:
 | UI Utilities | `clsx`, `tailwind-merge`, `class-variance-authority`, `lucide-react`, `framer-motion` |
 | Forms | React Hook Form, `@hookform/resolvers` |
 | Validation | Zod |
-| Data Fetching | TanStack Query (installed, not wired into active flows yet) |
+| HTTP and Data Fetching | Native `fetch` via shared wrappers, `axios` (installed), TanStack Query (installed, not wired into active flows yet) |
 | Auth | NextAuth (`next-auth`) with external-backend or demo credential modes |
 | Testing | Jest |
 | Linting | ESLint |
@@ -43,6 +43,7 @@ This repository gives you a production-oriented frontend baseline with:
 - Reusable primitive components in `src/components/ui`
 - Feature-scoped composition in `src/components/features`
 - App-level loading, error, and not-found states already scaffolded
+- `axios` is available for external or client-side HTTP integrations when needed
 - API contract and architecture docs kept in `docs/`
 
 ## Installation
@@ -192,6 +193,9 @@ pnpm test:watch
 - `src/lib/schemas`: request and response validation
 - `src/lib/clients`: external API callers
 - `src/providers`: reserved for narrowly-scoped client providers when they are actually needed
+
+HTTP note:
+The current codebase still uses the shared `fetchJson` wrapper in `src/lib/api/fetcher.ts` for active requests. `axios` is installed and documented as an available HTTP client, but it is not the default path unless a feature explicitly adopts it.
 
 ## Documentation
 

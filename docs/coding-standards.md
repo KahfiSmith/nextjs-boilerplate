@@ -45,7 +45,8 @@ This file defines coding standards to keep implementation quality consistent.
 - API route handlers should parse input, enforce auth checks, and map status/response.
 - Put business logic in services.
 - Put data access in repositories.
-- Put frontend fetch helpers in `src/lib/api/*`.
+- Put frontend HTTP helpers in `src/lib/api/*`.
+- Prefer the existing `fetchJson` helper for consistency unless a feature has a concrete need for `axios`.
 - Do not expose raw internal errors to clients.
 
 ## Validation and Types

@@ -42,12 +42,13 @@ This document contains reusable implementation recipes for common changes in thi
 4. Add a client component only when interactivity, browser APIs, or live client re-fetching is required.
 
 ## Pattern F: Optional TanStack Query Data Fetching
-1. Put the raw fetch helper in `src/lib/api/<resource>.client.ts`.
+1. Put the raw HTTP helper in `src/lib/api/<resource>.client.ts`.
 2. Parse the response with a Zod schema from `src/lib/schemas/*`.
 3. Wrap the request with a hook in `src/hooks/queries/use-<resource>-query.ts`.
 4. Add centralized query keys only when multiple client queries exist; do not assume `src/hooks/queries/query-keys.ts` already exists.
 5. Consume the hook from feature components, not from UI primitives.
-6. Skip this pattern for simple server-rendered reads that do not benefit from client caching.
+6. Use the existing `fetchJson` wrapper by default; adopt `axios` only when the feature benefits from instance-level config or interceptors.
+7. Skip this pattern for simple server-rendered reads that do not benefit from client caching.
 
 ## Pattern G: Auth-Protected Area
 1. Choose protection boundary: middleware, route handler, or page-level guard.

@@ -7,6 +7,7 @@ This document defines architecture boundaries that must be preserved.
 - React 19
 - TypeScript strict
 - Tailwind CSS v4
+- Axios (installed, optional for HTTP clients)
 - TanStack Query (installed, optional; not wired into active runtime flows yet)
 - React Hook Form
 - `@hookform/resolvers`
@@ -28,7 +29,7 @@ This document defines architecture boundaries that must be preserved.
 - `src/hooks/*`
   - Reusable client-side hooks. In the current repo this directory is scaffolded only; add hooks when browser state or shared client fetching is actually needed.
 - `src/lib/api/*`
-  - Shared fetch utilities and internal API clients for frontend data access.
+  - Shared HTTP utilities and internal API clients for frontend data access.
 - `src/lib/services/*`
   - Business logic and use-case orchestration.
 - `src/lib/repositories/*`
@@ -48,7 +49,8 @@ Rules:
 - Hooks can depend on `lib/api`, but business rules should stay in services.
 - Route handlers should not contain complex domain logic.
 - Service layer must not depend on UI component modules.
-- For simple same-app reads, prefer a server component calling a service directly over adding a client fetch + query layer.
+- For simple same-app reads, prefer a server component calling a service directly over adding a client HTTP + query layer.
+- Default to the existing shared `fetchJson` wrapper unless a concrete requirement justifies `axios` for a specific client.
 
 ## Implementation Path Map
 Use these default paths so prompts and implementations stay consistent:
@@ -57,7 +59,7 @@ Use these default paths so prompts and implementations stay consistent:
 - Query/DB access: `src/lib/repositories/<resource>.repository.ts`
 - Validation schema: `src/lib/schemas/<resource>.schema.ts`
 - Shared types/DTO: `src/types/<resource>.types.ts`
-- Internal API caller (frontend fetch): `src/lib/api/<resource>.client.ts`
+- Internal API caller (frontend HTTP helper): `src/lib/api/<resource>.client.ts`
 - External API clients (Stripe/OpenAI/etc): `src/lib/clients/<provider>.client.ts`
 - UI data hooks: `src/hooks/queries/use-<resource>-query.ts` (only when client-side fetching is justified; not used by active flows today)
 - Feature components: `src/components/features/<resource>/...`
@@ -77,6 +79,11 @@ Use these default paths so prompts and implementations stay consistent:
 - Use `@hookform/resolvers` when binding shared schemas to form validation.
 - Keep canonical validation rules in `src/lib/schemas/*`; client-side validation is for UX, not trust.
 - Route handlers and services must still validate and enforce server-side rules.
+
+## HTTP Client Guidance
+- `axios` is installed and may be used for external integrations or client flows that benefit from interceptors, cancellation handling, or custom instance configuration.
+- Active runtime flows currently use the native `fetch`-based helper in `src/lib/api/fetcher.ts`.
+- Do not mix `fetch` and `axios` within the same feature without a clear boundary and reason.
 
 ## API Request Flow (Target Pattern)
 1. `route.ts` parses request and applies auth checks.

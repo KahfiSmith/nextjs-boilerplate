@@ -1,49 +1,60 @@
 # Implementation Workflow (Reference Flow)
 
-This file is a reference flow for implementing features without adding ad-hoc structure.
+This file is the reference flow for implementing features without inventing ad-hoc structure.
 
-## End-to-End Layer Flow
-Current default:
-`page/server component or api route -> service -> repository -> schema/types`
+## Current Default Flow
 
-Optional client-fetch path:
-`client component -> lib/api HTTP helper or client -> hook(optional) -> feature component`
+For route work:
 
-Server-first read path:
-`page/server component -> service -> repository/schema/types`
+`page -> feature/common component -> service if needed -> lib/utils or config`
+
+For future API work:
+
+`route handler -> service -> helper module -> response mapping`
+
+For future client state work:
+
+`client component -> provider or store only when justified`
 
 ## Default Path Map
-- Endpoint HTTP: `src/app/api/<resource>/route.ts`
-- Business logic: `src/lib/services/<resource>.service.ts`
-- Query/DB access: `src/lib/repositories/<resource>.repository.ts`
-- Validation schema: `src/lib/schemas/<resource>.schema.ts`
-- Shared types/DTO: `src/types/<resource>.types.ts`
-- Internal API caller (frontend HTTP helper): `src/lib/api/<resource>.client.ts`
-- External API client (Stripe/OpenAI/etc): `src/lib/clients/<provider>.client.ts`
-- UI data hook: `src/hooks/queries/use-<resource>-query.ts` (optional; not used by active flows today)
-- Feature components: `src/components/features/<resource>/...`
-- Env mapping: `src/config/env.ts` + `.env.local` (from `.env.example`)
+
+- Public page: `src/app/(public)/<segment>/page.tsx`
+- Protected page: `src/app/(protected)/<segment>/page.tsx`
+- Feature UI: `src/components/features/<feature>/...`
+- Common route UI: `src/components/common/<name>.tsx`
+- Service: `src/services/<feature>/<feature>.service.ts`
+- Shared utility: `src/lib/utils/<name>.ts`
+- API helper: `src/lib/api/<name>.ts`
+- Auth helper: `src/lib/auth/<name>.ts`
+- Config: `src/config/<name>.ts`
+- Store: `src/store/<feature>-store.ts`
+- Types: `src/types/<feature>.types.ts`
+- API route when introduced: `src/app/api/<resource>/route.ts`
 
 ## Practical Steps
-1. Define/adjust DTO and schema first.
-2. Implement repository (data source contract).
-3. Implement service (business rules and orchestration).
-4. Implement API route handler (HTTP mapping and status codes).
-5. Choose UI data path:
-   - server component + direct service call for simple read-only flows
-   - frontend API caller + optional query hook for client-side fetching and cache use cases
-   - prefer the existing `fetchJson` wrapper first; use `axios` only when the flow needs its client features
-6. Build UI feature using reusable child components.
-7. Verify and sync docs.
+
+1. Confirm the target file is active and not just a placeholder.
+2. Implement the smallest useful change in the appropriate route or feature module.
+3. Extract business logic into `src/services/*` only when the page or component starts owning non-trivial behavior.
+4. Introduce helpers in `src/lib/*` only when reuse or boundary clarity justifies them.
+5. Update docs as part of the same task whenever visible structure or active runtime behavior changes.
+6. Verify using the relevant project commands.
 
 ## Verification
+
 - `pnpm lint`
 - `pnpm type-check`
-- `pnpm test` (if relevant)
+- `pnpm test`
+
+Note:
+
+- The current Jest example still targets a removed health route, so treat `pnpm test` as a repository-health signal rather than proof of a working API layer until that mismatch is resolved.
 
 ## Documentation Sync
+
+- Visible app surface or setup changed: update `README.md`
 - API behavior changed: update `docs/api.md`
-- Architecture/path policy changed: update `docs/architecture.md`
-- Implementation pattern changed: update `docs/patterns.md`
+- Architecture or path policy changed: update `docs/architecture.md`
+- Implementation recipe changed: update `docs/patterns.md`
 - Database policy changed: update `docs/database.md`
 - Workflow changed: update this file

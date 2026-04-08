@@ -20,6 +20,9 @@ This file defines coding standards to keep implementation quality consistent.
 ## Imports
 
 - Prefer `@/*` alias imports based on `tsconfig.json`.
+- Use `@/...` for internal imports and internal barrel re-exports whenever possible.
+- Prefer folder-level imports such as `@/config` or `@/store` when a folder exposes a deliberate `index.ts` public API.
+- Keep relative imports only for same-file assets or framework-required local paths such as `./globals.css`.
 - Keep import order clear: external libraries, internal aliases, then relative imports.
 - Remove unused imports.
 
@@ -43,7 +46,7 @@ This file defines coding standards to keep implementation quality consistent.
 - Put business rules in `src/services/*`.
 - Put reusable frontend API helpers in `src/lib/api/*`.
 - Put auth-specific helpers in `src/lib/auth/*`.
-- Today, several files in those directories are placeholders; when implementing them, keep them small and feature-owned.
+- Keep these helpers small, explicit, and feature-owned.
 - Do not move business rules into hooks or UI components.
 
 ## Providers, Hooks, and Store
@@ -51,7 +54,8 @@ This file defines coding standards to keep implementation quality consistent.
 - `src/providers/*`: client providers only when a subtree actually needs them.
 - `src/hooks/*`: reusable React hooks only.
 - `src/store/*`: client-side state only when local component state is no longer enough.
-- Avoid mounting global providers just because the folder exists.
+- Prefer Zustand for shared client state in this repo.
+- Avoid mounting global providers without a clear app-level responsibility.
 
 ## Styling
 
@@ -69,6 +73,8 @@ This file defines coding standards to keep implementation quality consistent.
 
 - Define shared contracts in `src/types/*`.
 - Introduce schema files only when there is real validation logic to share.
+- Prefer re-exporting type modules from `src/types/index.ts` rather than manually listing every symbol once the folder starts growing.
+- Use manual named re-exports only when you intentionally want a curated public surface.
 - Avoid `any`; if unavoidable, explain why.
 - Keep env parsing centralized in `src/config/env.ts` or another explicit config module.
 

@@ -6,6 +6,8 @@ This document is the source of truth for endpoint contracts in this repository.
 
 There are currently no active route handlers under `src/app/api`.
 
+The current auth bootstrap does not use API routes. It relies on a serialized cookie session plus middleware and server-side guards.
+
 As of the current tree:
 
 - `src/app/api` does not exist

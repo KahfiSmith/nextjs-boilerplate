@@ -1,6 +1,6 @@
 # Architecture (Frontend Next.js Boilerplate)
 
-This document defines architecture boundaries that must be preserved and clarifies which parts of the current repository are active versus planned.
+This document defines architecture boundaries that must be preserved and clarifies which parts of the current repository are active versus still intentionally thin.
 
 ## Stack Baseline
 
@@ -13,6 +13,7 @@ This document defines architecture boundaries that must be preserved and clarifi
 - Zod
 - shadcn-style component system
 - Axios and TanStack Query installed for future client data flows
+- Zustand for shared client-side state
 - Jest for testing
 
 ## Current Runtime Snapshot
@@ -21,24 +22,26 @@ Active today:
 
 - `src/app/layout.tsx`
 - `src/app/error.tsx`
+- `src/app/(public)/page.tsx`
 - `src/app/(public)/login/page.tsx`
 - `src/app/(public)/register/page.tsx`
+- `src/app/(protected)/profile/page.tsx`
 - `src/config/env.ts`
+- `src/config/routes.ts`
+- `src/config/navigation.ts`
+- `src/config/site.ts`
+- `auth.ts`
+- `src/lib/auth/*`
+- `src/lib/api/*`
+- `src/providers/*`
+- `src/hooks/*`
+- `src/store/auth-store.ts`
 - `src/components/ui/button.tsx`
+- `src/components/common/header.tsx`
+- `src/components/common/footer.tsx`
 - `src/components/common/loading.tsx`
 - `src/components/common/not-found.tsx`
 - `middleware.ts`
-
-Present but currently placeholder-only or empty:
-
-- `src/app/(public)/page.tsx`
-- `src/app/(protected)/profile/page.tsx`
-- `auth.ts`
-- `src/services/*`
-- `src/providers/*`
-- `src/lib/api/*`
-- `src/lib/auth/*`
-- most files in `src/config/*`, `src/store/*`, and `src/types/*`
 
 There are no active route handlers under `src/app/api` in the current tree.
 
@@ -53,17 +56,17 @@ There are no active route handlers under `src/app/api` in the current tree.
 - `src/components/features/*`
   - Feature-level UI composition.
 - `src/services/*`
-  - Intended business logic and use-case orchestration.
+  - Intended business logic and use-case orchestration. Still intentionally thin in the current repo.
 - `src/lib/api/*`
-  - Intended shared HTTP utilities and frontend API helpers.
+  - Shared HTTP utilities, query keys, and API error helpers.
 - `src/lib/auth/*`
-  - Intended auth-related helpers and runtime adapters.
+  - Cookie-backed session helpers, permissions, and auth metadata.
 - `src/lib/utils/*`
   - Shared low-level utilities such as class-name merging.
 - `src/providers/*`
   - Optional client providers.
 - `src/store/*`
-  - Optional client state.
+  - Optional client state. The current auth store uses Zustand.
 - `src/types/*`
   - Shared type contracts.
 - `src/config/*`
@@ -114,9 +117,10 @@ If route handlers are reintroduced:
 
 - `src/config/env.ts` is the active auth configuration entrypoint today.
 - `AUTH_STRATEGY` supports `nextauth`, `external`, and `none`.
-- `middleware.ts` only protects `/`, and only when `AUTH_STRATEGY=nextauth`.
-- `auth.ts` and `src/lib/auth/*` exist in the tree but are not implemented yet.
-- If auth runtime is activated later, update `README.md`, `docs/api.md`, and this file in the same change.
+- The current auth bootstrap uses a serialized cookie session, not a backend adapter.
+- `middleware.ts` currently guards `/profile` and redirects signed-in users away from `/login`.
+- `auth.ts` re-exports the shared auth helpers for future integration points.
+- If a real backend or NextAuth adapter is introduced later, update `README.md`, `docs/api.md`, and this file in the same change.
 
 ## API Boundary
 
@@ -126,12 +130,12 @@ If route handlers are reintroduced:
 
 ## Testing Boundary
 
-- Jest is configured, but the current example test still references the removed `src/app/api/health/route`.
-- Treat test coverage as incomplete until route tests and runtime structure are brought back into sync.
+- Jest is configured and currently covers the cookie-session helper flow.
+- Test coverage is still minimal and should expand when real API routes or service logic are added.
 
 ## Architecture Change Checklist
 
 - Layer boundaries remain intact.
 - Import direction still follows dependency flow.
-- Placeholder areas are not described as active runtime dependencies.
+- Active baseline modules are reflected accurately in docs.
 - Related docs are synchronized: `README.md`, `docs/api.md`, `docs/patterns.md`, `docs/rules.md`, and `docs/database.md` when relevant.

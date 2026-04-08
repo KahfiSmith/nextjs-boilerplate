@@ -4,7 +4,7 @@ Opinionated Next.js App Router starter for teams that want strict TypeScript, a 
 
 ## Overview
 
-The repository is currently in a transition state: the route structure, env handling, and UI primitives are in place, but several planned modules are still empty placeholders.
+The repository now has a usable baseline for route groups, cookie-backed auth bootstrap, providers, hooks, store, and shared API utilities. The architecture is still intentionally small, but the core app shell is no longer placeholder-only.
 
 What is active today:
 
@@ -13,17 +13,17 @@ What is active today:
 - Public route group in `src/app/(public)`
 - Protected route group in `src/app/(protected)`
 - Root layout and app-level error boundary
-- Auth env parsing in `src/config/env.ts`
-- Middleware guard for `/` when `AUTH_STRATEGY=nextauth`
-- Shared UI primitive `Button` and common loading/not-found components
+- Cookie-backed auth bootstrap in `auth.ts` and `src/lib/auth/*`
+- App provider composition in `src/providers/*`
+- Shared hooks and auth store in `src/hooks/*` and `src/store/*` with Zustand
+- Shared UI primitive `Button` and common layout components
 
 What is not implemented yet:
 
 - Active route handlers under `src/app/api`
-- Working auth runtime in `auth.ts` or `src/lib/auth/*`
 - Non-empty service implementations in `src/services/*`
-- Wired providers in `src/providers/*`
-- Shared API client logic in `src/lib/api/*`
+- Backend-integrated auth contract or real NextAuth adapter flow
+- Feature-specific API routes that consume `src/lib/api/*`
 
 ## Tech Stack
 
@@ -37,7 +37,8 @@ What is not implemented yet:
 | Forms | React Hook Form, `@hookform/resolvers` |
 | Validation | Zod |
 | Data and Fetching | Native `fetch`, `axios`, TanStack Query |
-| Auth | `next-auth` is installed, but current auth runtime files are still placeholders |
+| Client State | Zustand |
+| Auth | Lightweight cookie-backed bootstrap session flow, with `next-auth` available for later integration |
 | Testing | Jest |
 | Linting | ESLint |
 
@@ -47,14 +48,15 @@ Current routes based on `src/app`:
 
 - `/login` via `src/app/(public)/login/page.tsx`
 - `/register` via `src/app/(public)/register/page.tsx`
-- `/` via `src/app/(public)/page.tsx` but the page file is currently empty
-- `/profile` via `src/app/(protected)/profile/page.tsx` but the page file is currently empty
+- `/` via `src/app/(public)/page.tsx`
+- `/profile` via `src/app/(protected)/profile/page.tsx`
 
 Behavior notes:
 
-- `/login` redirects to `/` when `getAuthSession()` returns a session
-- `/register` is an informational page explaining external-backend registration flow
-- `middleware.ts` only matches `/`
+- `/login` redirects to `/profile` when a session cookie already exists
+- `/profile` is protected by middleware and server-side session checks
+- `/register` now renders a dedicated feature component
+- `middleware.ts` matches `/login` and `/profile/:path*`
 - There are no active API endpoints in `src/app/api`
 
 ## Installation
@@ -165,21 +167,26 @@ Current env usage:
 ### Responsibility Guide
 
 - `src/app`: route boundaries, layouts, and route-level UI
-- `src/components/common`: shared page-level UI such as loading and not-found components
+- `src/components/common`: shared page-level UI such as header, footer, loading, and not-found components
 - `src/components/ui`: reusable UI primitives
 - `src/components/features`: feature-level UI composition
-- `src/config`: app configuration modules; only `env.ts` is active today
+- `src/config`: app configuration modules for env, routes, navigation, and site metadata
 - `src/services`: intended business-logic layer; current files are placeholders
-- `src/lib/api`: intended frontend API helper layer; current files are placeholders
-- `src/lib/auth`: intended auth helper layer; current files are placeholders
-- `src/providers`: reserved for client providers; current files are placeholders
-- `src/store`: reserved for client-side state; current file is placeholder
+- `src/lib/api`: shared API client, query-key, and error helper layer
+- `src/lib/auth`: cookie session serialization, permissions, and auth metadata helpers
+- `src/providers`: app, query, session, and theme providers
+- `src/store`: lightweight client-state store layer powered by Zustand
+
+Import note:
+
+- Prefer folder-level imports such as `@/config`, `@/store`, `@/hooks`, `@/lib/auth`, `@/lib/utils`, and `@/components/ui` when the folder already exposes a deliberate `index.ts`.
+- Do not introduce a single root barrel for the whole repository.
 
 ## Testing and Verification Notes
 
 - `pnpm lint`, `pnpm type-check`, and `pnpm test` are the standard quality checks
-- The current Jest example in `src/__tests__/health-route.test.ts` still imports `@/app/api/health/route`, but that route file no longer exists
-- Treat the current test suite as out of sync until the API surface or the test is updated
+- `src/__tests__/auth-session.test.ts` covers cookie session serialization and expiry parsing
+- Current lint is clean after removing the previous warning in `src/app/error.tsx`
 
 ## Documentation
 
@@ -195,6 +202,6 @@ Use these docs as the source of truth when extending the boilerplate:
 
 ## Notes
 
-- This boilerplate currently describes a target architecture more than a finished feature set.
-- Several files are intentionally present as placeholders; do not assume a directory is active just because it exists.
+- This boilerplate now has a minimal but functional auth bootstrap instead of empty auth scaffolding.
+- Service and API route layers are still intentionally thin and should grow only when a feature actually needs them.
 - If you add active API routes, auth runtime, or persistence code, update the related docs in `docs/` immediately.

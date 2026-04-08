@@ -3,6 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
 
+import { siteConfig } from "@/config";
+import { getAuthSession } from "@/lib/auth";
+import { AppProvider } from "@/providers/app-provider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -14,18 +18,24 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Next.js Boilerplate",
-  description: "App Router boilerplate with modular auth scaffolding",
+  description: siteConfig.description,
+  title: siteConfig.name,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getAuthSession();
+
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <AppProvider initialSession={session}>{children}</AppProvider>
+      </body>
     </html>
   );
 }

@@ -1,14 +1,14 @@
 import { redirect } from "next/navigation";
 
 import { LoginForm } from "@/components/features/auth/login-form";
-import { env } from "@/config/env";
+import { env, routes } from "@/config";
 import { getAuthSession } from "@/lib/auth";
 
 export default async function LoginPage() {
   const session = await getAuthSession();
 
   if (session) {
-    redirect("/");
+    redirect(routes.profile);
   }
 
   return (

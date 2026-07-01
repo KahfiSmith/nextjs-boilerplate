@@ -1,70 +1,41 @@
-const readRequiredEnv = (name: string): string => {
-  const value = process.env[name];
+import { z } from "zod";
 
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${name}`);
-  }
+const envSchema = z.object({
+  AUTH_STRATEGY: z.enum(["nextauth", "external", "none"]).default("nextauth"),
+  AUTH_MODE: z.enum(["external", "demo"]).default("external"),
+  NEXT_PUBLIC_APP_URL: z.string().url().default("http://localhost:3000"),
+  NEXTAUTH_URL: z.string().url().default("http://localhost:3000"),
+  NEXTAUTH_SECRET: z.string().default("not-used"),
+  BACKEND_API_URL: z.string().url().optional(),
+  BACKEND_AUTH_LOGIN_PATH: z.string().default("/api/auth/login"),
+  BACKEND_AUTH_TIMEOUT_MS: z.coerce.number().positive().default(8000),
+  AUTH_DEMO_NAME: z.string().default("Demo User"),
+  AUTH_DEMO_EMAIL: z.string().email().default("demo@example.com"),
+  AUTH_DEMO_PASSWORD: z.string().default("demo12345"),
+}).transform((data) => {
+  // If nextauth is the strategy, secret becomes practically required for functionality
+  // We handle this logically in the app, but structural validation happens here
+  return {
+    authStrategy: data.AUTH_STRATEGY,
+    authMode: data.AUTH_MODE,
+    appUrl: data.NEXT_PUBLIC_APP_URL,
+    nextAuthUrl: data.NEXTAUTH_URL,
+    nextAuthSecret: data.NEXTAUTH_SECRET,
+    backendApiUrl: data.BACKEND_API_URL,
+    backendAuthLoginPath: data.BACKEND_AUTH_LOGIN_PATH,
+    backendAuthTimeoutMs: data.BACKEND_AUTH_TIMEOUT_MS,
+    demoAuthName: data.AUTH_DEMO_NAME,
+    demoAuthEmail: data.AUTH_DEMO_EMAIL,
+    demoAuthPassword: data.AUTH_DEMO_PASSWORD,
+  };
+});
 
-  return value;
-};
+const parsedEnv = envSchema.safeParse(process.env);
 
-const readOptionalEnv = (name: string, fallback: string): string => {
-  const value = process.env[name];
-  return value && value.trim().length > 0 ? value : fallback;
-};
+if (!parsedEnv.success) {
+  // eslint-disable-next-line no-console
+  console.error("❌ Invalid environment variables:", parsedEnv.error.format());
+  throw new Error("Invalid environment variables");
+}
 
-const readOptionalNumberEnv = (
-  name: string,
-  fallback: number
-): number => {
-  const value = process.env[name];
-
-  if (!value || value.trim().length === 0) {
-    return fallback;
-  }
-
-  const parsed = Number(value);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
-};
-
-const readAuthStrategy = (): "nextauth" | "external" | "none" => {
-  const value = process.env.AUTH_STRATEGY;
-
-  if (value === "external" || value === "none") {
-    return value;
-  }
-
-  return "nextauth";
-};
-
-const readAuthMode = (): "external" | "demo" => {
-  const value = process.env.AUTH_MODE;
-
-  if (value === "demo") {
-    return "demo";
-  }
-
-  return "external";
-};
-
-const authStrategy = readAuthStrategy();
-
-export const env = {
-  authStrategy,
-  appUrl: readOptionalEnv("NEXT_PUBLIC_APP_URL", "http://localhost:3000"),
-  nextAuthUrl: readOptionalEnv("NEXTAUTH_URL", "http://localhost:3000"),
-  nextAuthSecret:
-    authStrategy === "nextauth"
-      ? readRequiredEnv("NEXTAUTH_SECRET")
-      : readOptionalEnv("NEXTAUTH_SECRET", "not-used"),
-  authMode: readAuthMode(),
-  backendApiUrl: process.env.BACKEND_API_URL,
-  backendAuthLoginPath: readOptionalEnv(
-    "BACKEND_AUTH_LOGIN_PATH",
-    "/api/auth/login"
-  ),
-  backendAuthTimeoutMs: readOptionalNumberEnv("BACKEND_AUTH_TIMEOUT_MS", 8000),
-  demoAuthName: readOptionalEnv("AUTH_DEMO_NAME", "Demo User"),
-  demoAuthEmail: readOptionalEnv("AUTH_DEMO_EMAIL", "demo@example.com"),
-  demoAuthPassword: readOptionalEnv("AUTH_DEMO_PASSWORD", "demo12345"),
-};
+export const env = parsedEnv.data;

@@ -1,5 +1,7 @@
 "use client";
 
+import { Toaster } from "sonner";
+
 import { QueryProvider } from "@/providers/query-provider";
 import { SessionProvider } from "@/providers/session-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
@@ -17,6 +19,7 @@ export function AppProvider({
       <QueryProvider>
         <SessionProvider initialSession={initialSession}>
           {children}
+          <Toaster richColors position="top-right" />
         </SessionProvider>
       </QueryProvider>
     </ThemeProvider>

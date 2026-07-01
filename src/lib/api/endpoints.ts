@@ -1,5 +1,5 @@
-export const apiEndpoints = {
-  authLogin: "/api/auth/login",
-  authSession: "/api/auth/session",
-  profile: "/api/profile",
+export const API_ENDPOINTS = {
+  AUTH_LOGIN: "/api/auth/login",
+  AUTH_SESSION: "/api/auth/session",
+  PROFILE: "/api/profile",
 } as const;

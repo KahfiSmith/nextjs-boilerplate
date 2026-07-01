@@ -33,9 +33,16 @@ export const requestJson = async <T>(
     },
   });
 
-  const payload = await response
-    .json()
-    .catch(() => null) as T | { error?: string } | null;
+  let payload: T | { error?: string } | null = null;
+  const rawText = await response.text().catch(() => "");
+
+  if (rawText) {
+    try {
+      payload = JSON.parse(rawText);
+    } catch {
+      payload = { error: rawText.substring(0, 500) }; // Fallback to raw text if not JSON
+    }
+  }
 
   if (!response.ok) {
     const message =

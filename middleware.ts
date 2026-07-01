@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-import { env, routes } from "@/config";
+import { routes } from "@/config";
 import {
   AUTH_SESSION_COOKIE,
   parseAuthSessionCookie,
@@ -11,7 +11,9 @@ const isProtectedRoute = (pathname: string) =>
   pathname === routes.profile || pathname.startsWith(`${routes.profile}/`);
 
 export default function middleware(request: NextRequest) {
-  if (env.authStrategy === "none") {
+  const authStrategy = process.env.AUTH_STRATEGY || "nextauth";
+
+  if (authStrategy === "none") {
     return NextResponse.next();
   }
 

@@ -15,7 +15,7 @@ This file defines coding standards to keep implementation quality consistent.
 - Component names: `PascalCase`.
 - Functions and variables: `camelCase`.
 - Constants: `UPPER_SNAKE_CASE` only for true immutable constants.
-- Feature services should live under feature folders such as `src/services/auth/auth.service.ts`.
+- Feature services should live under feature folders such as `src/lib/services/auth/auth.service.ts`.
 
 ## Imports
 
@@ -43,7 +43,7 @@ This file defines coding standards to keep implementation quality consistent.
 
 ## Services, API Helpers, and Auth Helpers
 
-- Put business rules in `src/services/*`.
+- Put business rules in `src/lib/services/*`.
 - Put reusable frontend API helpers in `src/lib/api/*`.
 - Put auth-specific helpers in `src/lib/auth/*`.
 - Keep these helpers small, explicit, and feature-owned.

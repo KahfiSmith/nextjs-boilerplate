@@ -55,7 +55,7 @@ There are no active route handlers under `src/app/api` in the current tree.
   - Reusable UI primitives with no domain knowledge.
 - `src/components/features/*`
   - Feature-level UI composition.
-- `src/services/*`
+- `src/lib/services/*`
   - Intended business logic and use-case orchestration. Still intentionally thin in the current repo.
 - `src/lib/api/*`
   - Shared HTTP utilities, query keys, and API error helpers.
@@ -95,7 +95,7 @@ Use these default paths so future implementation stays consistent with the curre
 - Feature component: `src/components/features/<feature>/...`
 - Common route UI: `src/components/common/<name>.tsx`
 - UI primitive: `src/components/ui/<name>.tsx`
-- Service: `src/services/<feature>/<feature>.service.ts`
+- Service: `src/lib/services/<feature>/<feature>.service.ts`
 - API helper: `src/lib/api/<feature>.ts` or another focused module name
 - Auth helper: `src/lib/auth/<module>.ts`
 - Config: `src/config/<module>.ts`

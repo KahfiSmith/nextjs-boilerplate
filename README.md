@@ -21,7 +21,7 @@ What is active today:
 What is not implemented yet:
 
 - Active route handlers under `src/app/api`
-- Non-empty service implementations in `src/services/*`
+- Non-empty service implementations in `src/lib/services/*`
 - Backend-integrated auth contract or real NextAuth adapter flow
 - Feature-specific API routes that consume `src/lib/api/*`
 

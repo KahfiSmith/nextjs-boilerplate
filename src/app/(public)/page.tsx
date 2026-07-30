@@ -1,9 +1,10 @@
 import Link from "next/link";
 
-import { Footer, Header } from "@/components/common";
-import { Button } from "@/components/ui";
-import { env, routes } from "@/config";
-import { getAuthSession } from "@/lib/auth";
+import { Footer } from "@/components/common/footer";
+import { Header } from "@/components/common/header";
+import { Button } from "@/components/ui/button";
+import { ROUTES } from "@/config/routes";
+import { getAuthSession } from "@/lib/auth/session";
 
 export default async function HomePage() {
   const session = await getAuthSession();
@@ -12,11 +13,8 @@ export default async function HomePage() {
     <div className="min-h-screen bg-background">
       <Header />
 
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-6 py-16">
+      <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-6 py-16">
         <section className="space-y-4">
-          <p className="text-sm font-medium text-primary">
-            Active auth strategy: {env.authStrategy}
-          </p>
           <h1 className="max-w-2xl text-4xl font-semibold tracking-tight">
             Boilerplate foundation for auth, providers, hooks, API helpers, and
             route groups.
@@ -29,12 +27,12 @@ export default async function HomePage() {
 
         <section className="flex flex-wrap gap-3">
           <Button asChild>
-            <Link href={session ? routes.profile : routes.login}>
+            <Link href={session ? ROUTES.PROFILE : ROUTES.LOGIN}>
               {session ? "Open profile" : "Sign in"}
             </Link>
           </Button>
           <Button asChild variant="outline">
-            <Link href={routes.register}>View register flow</Link>
+            <Link href={ROUTES.REGISTER}>View register flow</Link>
           </Button>
         </section>
 
@@ -46,7 +44,7 @@ export default async function HomePage() {
               : "No active session cookie found."}
           </p>
         </section>
-      </main>
+      </div>
 
       <Footer />
     </div>

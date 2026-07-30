@@ -1,2 +1,11 @@
-export type Maybe<T> = T | null | undefined;
-export type Nullable<T> = T | null;
+export interface ApiResponse<T = unknown> {
+  data: T;
+  message: string;
+  meta?: {
+    currentPage: number;
+    lastPage: number;
+    perPage: number;
+    total: number;
+  };
+  success: boolean;
+}

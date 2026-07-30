@@ -1,14 +1,14 @@
-export type AuthStrategy = "nextauth" | "external" | "none";
-export type AuthRole = "guest" | "member" | "admin";
-
 export interface AuthUser {
   email: string;
+  id: string;
   name: string;
-  role: AuthRole;
+  role?: string;
 }
 
 export interface AuthSession {
+  accessToken: string;
   expiresAt: string;
+  refreshToken?: string;
   user: AuthUser;
 }
 

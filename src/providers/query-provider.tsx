@@ -6,21 +6,15 @@ import {
 } from "@tanstack/react-query";
 import { useState } from "react";
 
+import { queryClientConfig } from "@/lib/api/queries";
+
 export function QueryProvider({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            refetchOnWindowFocus: false,
-            staleTime: 30_000,
-          },
-        },
-      })
+    () => new QueryClient(queryClientConfig)
   );
 
   return (

@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 
-import { setAuthSession } from "@/store";
-import type { AuthSession } from "@/types";
+import { setAuthSession } from "@/store/auth-store";
+import type { AuthSession } from "@/types/auth.types";
 
 export function SessionProvider({
   children,
@@ -13,7 +13,9 @@ export function SessionProvider({
   initialSession?: AuthSession | null;
 }>) {
   useEffect(() => {
-    setAuthSession(initialSession);
+    if (initialSession) {
+      setAuthSession(initialSession);
+    }
   }, [initialSession]);
 
   return children;

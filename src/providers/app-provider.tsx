@@ -4,8 +4,7 @@ import { Toaster } from "sonner";
 
 import { QueryProvider } from "@/providers/query-provider";
 import { SessionProvider } from "@/providers/session-provider";
-import { ThemeProvider } from "@/providers/theme-provider";
-import type { AuthSession } from "@/types";
+import type { AuthSession } from "@/types/auth.types";
 
 export function AppProvider({
   children,
@@ -15,13 +14,11 @@ export function AppProvider({
   initialSession?: AuthSession | null;
 }>) {
   return (
-    <ThemeProvider>
-      <QueryProvider>
-        <SessionProvider initialSession={initialSession}>
-          {children}
-          <Toaster richColors position="top-right" />
-        </SessionProvider>
-      </QueryProvider>
-    </ThemeProvider>
+    <QueryProvider>
+      <SessionProvider initialSession={initialSession}>
+        {children}
+        <Toaster position="top-right" richColors />
+      </SessionProvider>
+    </QueryProvider>
   );
 }

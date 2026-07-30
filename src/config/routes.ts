@@ -1,8 +1,8 @@
-export const routes = {
-  home: "/",
-  login: "/login",
-  register: "/register",
-  profile: "/profile",
+export const ROUTES = {
+  HOME: "/",
+  LOGIN: "/login",
+  REGISTER: "/register",
+  PROFILE: "/profile",
 } as const;
 
-export type AppRoute = (typeof routes)[keyof typeof routes];
+export type AppRoute = (typeof ROUTES)[keyof typeof ROUTES];

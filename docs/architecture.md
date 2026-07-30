@@ -116,7 +116,7 @@ If route handlers are reintroduced:
 ## Auth Boundary
 
 - `src/config/env.ts` is the active auth configuration entrypoint today.
-- `AUTH_STRATEGY` supports `nextauth`, `external`, and `none`.
+- `AUTH_STRATEGY` supports `external` and `none`.
 - The current auth bootstrap uses a serialized cookie session, not a backend adapter.
 - `middleware.ts` currently guards `/profile` and redirects signed-in users away from `/login`.
 - `auth.ts` re-exports the shared auth helpers for future integration points.

@@ -1,32 +1,22 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-import { routes } from "@/config";
-import {
-  AUTH_SESSION_COOKIE,
-  parseAuthSessionCookie,
-} from "@/lib/auth";
+import { ROUTES } from "@/config/routes";
+import { USER_SESSION_COOKIE } from "@/lib/auth/session";
 
 const isProtectedRoute = (pathname: string) =>
-  pathname === routes.profile || pathname.startsWith(`${routes.profile}/`);
+  pathname === ROUTES.PROFILE || pathname.startsWith(`${ROUTES.PROFILE}/`);
 
 export default function middleware(request: NextRequest) {
-  const authStrategy = process.env.AUTH_STRATEGY || "nextauth";
-
-  if (authStrategy === "none") {
-    return NextResponse.next();
-  }
-
   const pathname = request.nextUrl.pathname;
-  const sessionCookie = request.cookies.get(AUTH_SESSION_COOKIE)?.value;
-  const session = parseAuthSessionCookie(sessionCookie);
+  const sessionCookie = request.cookies.get(USER_SESSION_COOKIE)?.value;
 
-  if (pathname === routes.login && session) {
-    return NextResponse.redirect(new URL(routes.profile, request.url));
+  if (pathname === ROUTES.LOGIN && sessionCookie) {
+    return NextResponse.redirect(new URL(ROUTES.PROFILE, request.url));
   }
 
-  if (isProtectedRoute(pathname) && !session) {
-    const loginUrl = new URL(routes.login, request.url);
+  if (isProtectedRoute(pathname) && !sessionCookie) {
+    const loginUrl = new URL(ROUTES.LOGIN, request.url);
     loginUrl.searchParams.set(
       "redirectTo",
       `${pathname}${request.nextUrl.search}`

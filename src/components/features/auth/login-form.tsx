@@ -6,21 +6,14 @@ import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { Button, Input, Label } from "@/components/ui";
-import { routes } from "@/config";
-import { useLogin } from "@/hooks";
-import { getAuthStrategyMeta } from "@/lib/auth";
+import { ROUTES } from "@/config/routes";
+import { useLogin } from "@/hooks/auth/use-login";
 import { LoginInput, loginSchema } from "@/lib/schemas/auth.schema";
-import type { AuthStrategy } from "@/types";
+import { Button, Input, Label } from "@/components/ui";
 
-export function LoginForm({
-  authStrategy,
-}: Readonly<{
-  authStrategy: AuthStrategy;
-}>) {
+export function LoginForm() {
   const searchParams = useSearchParams();
-  const { error, isPending, login, message } = useLogin(authStrategy);
-  const authMeta = getAuthStrategyMeta(authStrategy);
+  const { isPending, login } = useLogin();
 
   const {
     register,
@@ -38,7 +31,7 @@ export function LoginForm({
     const promise = login({
       email: data.email,
       password: data.password,
-      redirectTo: searchParams.get("redirectTo") || routes.profile,
+      redirectTo: searchParams.get("redirectTo") || ROUTES.PROFILE,
     });
 
     toast.promise(promise, {
@@ -51,9 +44,7 @@ export function LoginForm({
   return (
     <section className="w-full max-w-md space-y-6 rounded-xl border bg-card p-6 shadow-sm">
       <div className="space-y-2">
-        <p className="text-sm font-medium text-primary">{authMeta.label}</p>
         <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
-        <p className="text-sm text-muted-foreground">{authMeta.description}</p>
       </div>
 
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
@@ -85,26 +76,14 @@ export function LoginForm({
           )}
         </div>
 
-        {error && (
-          <p className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-            {error}
-          </p>
-        )}
-
-        {message && (
-          <p className="rounded-md border bg-muted px-3 py-2 text-sm text-muted-foreground">
-            {message}
-          </p>
-        )}
-
         <Button className="w-full" disabled={isPending} type="submit">
-          {isPending ? "Creating session..." : "Continue"}
+          {isPending ? "Signing in..." : "Continue"}
         </Button>
       </form>
 
       <p className="text-sm text-muted-foreground">
         Need an account?{" "}
-        <Link className="underline" href={routes.register}>
+        <Link className="underline" href={ROUTES.REGISTER}>
           Open registration guide
         </Link>
       </p>

@@ -6,17 +6,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button, Input, Label } from "@/components/ui";
-import { routes } from "@/config";
-import { getAuthStrategyMeta } from "@/lib/auth";
+import { ROUTES } from "@/config/routes";
+import { useRegister } from "@/hooks/auth/use-register";
 import { RegisterInput, registerSchema } from "@/lib/schemas/auth.schema";
-import type { AuthStrategy } from "@/types";
 
-export function RegisterForm({
-  authStrategy,
-}: Readonly<{
-  authStrategy: AuthStrategy;
-}>) {
-  const authMeta = getAuthStrategyMeta(authStrategy);
+export function RegisterForm() {
+  const { isPending, register: registerAuth } = useRegister();
 
   const {
     register,
@@ -32,23 +27,23 @@ export function RegisterForm({
   });
 
   const onSubmit = (data: RegisterInput) => {
-    toast.info("Registration submitted (UI Mock)", {
-      description: `Name: ${data.name}, Email: ${data.email}`
+    const promise = registerAuth(data);
+
+    toast.promise(promise, {
+      error: (err) => err?.message || "Failed to create account.",
+      loading: "Creating account...",
+      success: "Account created! Redirecting to login...",
     });
-    // eslint-disable-next-line no-console
-    console.log("Registration logic not yet implemented", data);
   };
 
   return (
     <section className="w-full max-w-lg space-y-4 rounded-xl border bg-card p-6 shadow-sm">
       <div className="space-y-2">
-        <p className="text-sm font-medium text-primary">{authMeta.label}</p>
         <h1 className="text-2xl font-semibold tracking-tight">
           Registration setup
         </h1>
         <p className="text-sm text-muted-foreground">
-          Keep the UI route in place, then replace the bootstrap flow with your
-          backend registration contract when it is ready.
+          Create an account to continue.
         </p>
       </div>
 
@@ -94,18 +89,13 @@ export function RegisterForm({
           )}
         </div>
 
-        <Button className="w-full" type="submit">
-          Create account
+        <Button className="w-full" disabled={isPending} type="submit">
+          {isPending ? "Creating account..." : "Create account"}
         </Button>
       </form>
 
-      <div className="rounded-md border bg-muted/40 p-4 text-sm text-muted-foreground">
-        Configure `AUTH_MODE=external` and `BACKEND_API_URL` when the real auth
-        backend is available.
-      </div>
-
       <Button asChild variant="outline">
-        <Link href={routes.login}>Go to login</Link>
+        <Link href={ROUTES.LOGIN}>Go to login</Link>
       </Button>
     </section>
   );

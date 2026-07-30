@@ -2,14 +2,14 @@
 
 import { AlertTriangle, RefreshCcw } from "lucide-react";
 
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 
 interface ErrorPageProps {
   error: Error & { digest?: string };
   reset: () => void;
 }
 
-export default function ErrorPage({ error, reset }: ErrorPageProps) {
+export function ErrorComponent({ error, reset }: ErrorPageProps) {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-5xl items-center justify-center p-6">
       <section className="w-full max-w-xl space-y-5 rounded-xl border bg-card p-6 shadow-sm">

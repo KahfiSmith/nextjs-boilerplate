@@ -1,14 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui";
-import { useLogin } from "@/hooks";
+import { useLogout } from "@/hooks/auth/use-logout";
 
 export function LogoutButton() {
-  const { isPending, logout } = useLogin("external");
+  const { isPending, logout } = useLogout();
 
   return (
-    <Button disabled={isPending} onClick={logout} type="button">
-      {isPending ? "Leaving..." : "Sign out"}
+    <Button disabled={isPending} onClick={() => logout()} type="button">
+      {isPending ? "Signing out..." : "Sign out"}
     </Button>
   );
 }

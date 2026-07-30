@@ -1,8 +1,8 @@
-export const queryKeys = {
-  auth: {
-    session: ["auth", "session"] as const,
+export const QUERY_KEYS = {
+  AUTH: {
+    SESSION: ["auth", "session"] as const,
   },
-  profile: {
-    current: ["profile", "current"] as const,
+  USER: {
+    PROFILE: ["user", "profile"] as const,
   },
 } as const;

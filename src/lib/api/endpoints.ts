@@ -1,5 +1,11 @@
 export const API_ENDPOINTS = {
-  AUTH_LOGIN: "/api/auth/login",
-  AUTH_SESSION: "/api/auth/session",
-  PROFILE: "/api/profile",
+  AUTH: {
+    LOGIN: "/api/v1/auth/login",
+    LOGOUT: "/api/v1/auth/logout",
+    REFRESH: "/api/v1/auth/refresh",
+    REGISTER: "/api/v1/auth/register",
+  },
+  USER: {
+    PROFILE: "/api/v1/user/profile",
+  },
 } as const;

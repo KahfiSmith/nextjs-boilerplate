@@ -4,7 +4,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "@/app/globals.css";
 
 import { siteConfig } from "@/config/site";
-import { getAuthSession } from "@/lib/auth/session";
 import { AppProvider } from "@/providers/app-provider";
 
 const geistSans = Geist({
@@ -22,19 +21,17 @@ export const metadata: Metadata = {
   title: siteConfig.name,
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getAuthSession();
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AppProvider initialSession={session}>{children}</AppProvider>
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );

@@ -1,15 +1,34 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import { LogoutButton } from "@/components/features/auth/logout-button";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/config/routes";
-import { getAuthSession } from "@/lib/auth/session";
+import { useAuthStore } from "@/store/auth-store";
 
-export default async function ProfilePage() {
-  const session = await getAuthSession();
+export default function ProfilePage() {
+  const router = useRouter();
+  const { status, user } = useAuthStore();
 
-  if (!session) {
-    return null; 
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace(ROUTES.LOGIN);
+    }
+  }, [status, router]);
+
+  if (status === "checking" || status === "idle") {
+    return (
+      <div className="flex items-center justify-center p-6 text-sm text-muted-foreground">
+        Loading session...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null;
   }
 
   return (
@@ -18,18 +37,18 @@ export default async function ProfilePage() {
         <div>
           <p className="text-sm font-medium text-primary">Protected route</p>
           <h1 className="text-2xl font-semibold tracking-tight">
-            Welcome back, {session.user.name}
+            Welcome back, {user.name}
           </h1>
         </div>
 
         <dl className="grid gap-3 rounded-lg border bg-muted/40 p-4 text-sm">
           <div>
             <dt className="font-medium">Email</dt>
-            <dd className="text-muted-foreground">{session.user.email}</dd>
+            <dd className="text-muted-foreground">{user.email}</dd>
           </div>
           <div>
             <dt className="font-medium">Role</dt>
-            <dd className="text-muted-foreground">{session.user.role}</dd>
+            <dd className="text-muted-foreground">{user.role || "Member"}</dd>
           </div>
         </dl>
 

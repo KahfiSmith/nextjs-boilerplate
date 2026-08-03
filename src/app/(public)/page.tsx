@@ -1,13 +1,12 @@
+"use client";
+
 import Link from "next/link";
 
-import { Footer } from "@/components/common/footer";
-import { Header } from "@/components/common/header";
-import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/config/routes";
-import { getAuthSession } from "@/lib/auth/session";
+import { useAuthStore } from "@/store/auth-store";
 
-export default async function HomePage() {
-  const session = await getAuthSession();
+export default function HomePage() {
+  const { status, user } = useAuthStore();
 
   return (
     <div className="min-h-screen bg-background">
@@ -20,15 +19,14 @@ export default async function HomePage() {
             route groups.
           </h1>
           <p className="max-w-2xl text-muted-foreground">
-            The repo now has a simple bootstrap session flow so the structure is
-            no longer empty while the real auth backend is still pending.
+            The repo now uses non-persisted memory Zustand store and backend HttpOnly refresh cookie.
           </p>
         </section>
 
         <section className="flex flex-wrap gap-3">
           <Button asChild>
-            <Link href={session ? ROUTES.PROFILE : ROUTES.LOGIN}>
-              {session ? "Open profile" : "Sign in"}
+            <Link href={status === "authenticated" ? ROUTES.PROFILE : ROUTES.LOGIN}>
+              {status === "authenticated" ? "Open profile" : "Sign in"}
             </Link>
           </Button>
           <Button asChild variant="outline">
@@ -39,9 +37,11 @@ export default async function HomePage() {
         <section className="rounded-xl border bg-card p-6 shadow-sm">
           <h2 className="text-lg font-semibold">Current session</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            {session
-              ? `Signed in as ${session.user.name} (${session.user.email}).`
-              : "No active session cookie found."}
+            {status === "authenticated" && user
+              ? `Signed in as ${user.name} (${user.email}).`
+              : status === "checking"
+                ? "Checking session status..."
+                : "No active session in memory."}
           </p>
         </section>
       </div>

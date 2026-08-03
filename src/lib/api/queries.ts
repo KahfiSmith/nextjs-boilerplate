@@ -1,6 +1,6 @@
 import type { QueryClient } from "@tanstack/react-query";
 
-import { ROUTES } from "@/config/routes";
+import { AUTH_ERROR_CODES } from "@/lib/api/auth-error-codes";
 import { ApiError } from "@/lib/api/error-handler";
 import { QUERY_KEYS } from "@/lib/api/query-keys";
 import { clearAuthSession } from "@/store/auth-store";
@@ -68,16 +68,21 @@ export const handleQueryError = (
   error: unknown,
   queryKey?: readonly unknown[]
 ) => {
-  if (error instanceof ApiError) {
-    if (error.status === 401) {
-      clearAuthQueries(queryClient);
-      clearAuthSession();
-      if (typeof window !== "undefined") {
-        window.location.href = ROUTES.LOGIN;
-      }
-    } else if (process.env.NODE_ENV === "development") {
-      // eslint-disable-next-line no-console
-      console.warn("Query Error:", { error, queryKey });
+  const errorCode = (error as { response?: { data?: { code?: string } } })?.response?.data?.code;
+
+  if (
+    errorCode === AUTH_ERROR_CODES.REFRESH_TOKEN_EXPIRED ||
+    errorCode === AUTH_ERROR_CODES.REFRESH_TOKEN_REUSED ||
+    errorCode === AUTH_ERROR_CODES.SESSION_REVOKED ||
+    errorCode === AUTH_ERROR_CODES.ACCOUNT_DISABLED
+  ) {
+    clearAuthQueries(queryClient);
+    clearAuthSession();
+    if (typeof window !== "undefined") {
+      window.location.replace("/login");
     }
+  } else if (process.env.NODE_ENV === "development") {
+    // eslint-disable-next-line no-console
+    console.warn("Query Error:", { error, queryKey });
   }
 };

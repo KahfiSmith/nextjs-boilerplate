@@ -1,25 +1,33 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { ROUTES } from "@/config/routes";
-import { apiClient } from "@/lib/api/client";
 import { API_ENDPOINTS } from "@/lib/api/endpoints";
-import { setAuthSessionCookie } from "@/lib/auth/session";
-import { setAuthSession } from "@/store/auth-store";
-import type { AuthSession, LoginInput } from "@/types/auth.types";
+import { authClient } from "@/lib/api/client";
+import type { LoginInput } from "@/lib/schemas/auth.schema";
+import { useAuthStore } from "@/store/auth-store";
+import type { ApiResponse, BackendAuthPayload } from "@/types/auth.types";
+import { mapAuthPayload } from "@/types/auth.types";
 
 export const useLogin = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const loginMutation = useMutation({
-    mutationFn: (credentials: LoginInput) =>
-      apiClient.post<AuthSession>(API_ENDPOINTS.AUTH.LOGIN, credentials),
+    mutationFn: async (credentials: LoginInput) => {
+      const response = await authClient.post<ApiResponse<BackendAuthPayload>>(
+        API_ENDPOINTS.AUTH.LOGIN,
+        credentials
+      );
+      const envelope = response.data;
+      return mapAuthPayload(envelope.data);
+    },
     onSuccess: (session, variables) => {
-      document.cookie = setAuthSessionCookie(session);
-      setAuthSession(session);
-      router.push(variables.redirectTo || ROUTES.PROFILE);
+      useAuthStore.getState().setSession(session);
+      queryClient.clear();
+      router.replace(variables.redirectTo || ROUTES.PROFILE);
     },
   });
 

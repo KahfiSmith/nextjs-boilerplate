@@ -1,79 +1,52 @@
-# API Contract
+# API Documentation & Contracts
 
-This document is the source of truth for endpoint contracts in this repository.
+The application communicates directly with the backend API configured via `NEXT_PUBLIC_BACKEND_API_URL`.
 
-## Current Status
+## Authentication Architecture
+- **Access Token**: In-memory only (stored in Zustand without persistence).
+- **Refresh Token**: Handled automatically by the Go Fiber backend via HttpOnly cookies (`refresh_token`).
+- **CSRF / XSS Protection**: JavaScript cannot read or manipulate the refresh token.
 
-There are currently no active route handlers under `src/app/api`.
+## Endpoints
 
-The current auth bootstrap does not use API routes. It relies on a serialized cookie session plus middleware and server-side guards.
+### 1. Login
+- **Endpoint**: `POST /api/v1/auth/login`
+- **Request Body**:
+  ```json
+  {
+    "email": "user@example.com",
+    "password": "password123"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "message": "Login successful",
+    "data": {
+      "access_token": "<jwt-token>",
+      "expires_in": 900,
+      "user": {
+        "id": "1",
+        "name": "User Name",
+        "email": "user@example.com"
+      }
+    }
+  }
+  ```
 
-As of the current tree:
+### 2. Refresh Session
+- **Endpoint**: `POST /api/v1/auth/refresh`
+- **Request Body**: None (Browser sends HttpOnly cookie automatically)
+- **Response**: Same as Login data payload.
 
-- `src/app/api` does not exist
-- there is no live `/api/health` route
-- there is no live NextAuth route handler
-- the example Jest file `src/__tests__/health-route.test.ts` is stale and still imports a removed route
-
-Do not document planned endpoints here as if they were already implemented.
-
-## Conventions for Future API Routes
-
-- Runtime: Next.js App Router Route Handlers in `src/app/api/**/route.ts`
-- Default content type: `application/json`
-- Success response: keep a consistent shape per endpoint, preferably `{ data: ... }` or `{ message: "..." }`
-- Error response: `{ error: "..." }`
-- Status code guideline:
-  - `200` successful read or update
-  - `201` resource created
-  - `400` invalid input
-  - `401` unauthorized
-  - `403` forbidden
-  - `404` not found
-  - `409` conflict
-  - `422` validation error when used consistently
-  - `500` internal error
-
-## Route Placement
-
-- Collection endpoint: `src/app/api/<resource>/route.ts`
-- Item endpoint: `src/app/api/<resource>/[id]/route.ts`
-- Nested endpoint: `src/app/api/<resource>/[id]/<sub-resource>/route.ts`
-
-Keep `route.ts` as the HTTP boundary only, then delegate reusable logic to `src/services/*` or another focused helper layer.
-
-## Endpoint Template
-
-````md
-### METHOD /api/...
-
-- Auth: Public | Protected
-- Handler: `src/app/api/.../route.ts`
-- Service or helper: `src/services/...` or another explicit module
-
-Request
-- Query params:
-- Body schema:
-
-Response
-- 2xx:
-```json
-{ "data": {} }
-```
-- 4xx/5xx:
-```json
-{ "error": "..." }
-```
-
-Notes
-- Backward compatibility:
-- Validation rules:
-- Side effects:
-````
-
-## API Change Checklist
-
-- The route file exists in `src/app/api`.
-- Request and response contracts are synchronized with implementation.
-- Status codes are consistent.
-- Tests target the active route, not removed scaffolding.
+### 3. Logout
+- **Endpoint**: `POST /api/v1/auth/logout`
+- **Request Body**: None
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "message": "Logged out successfully"
+  }
+  ```

@@ -1,36 +1,43 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
-import type { AuthSession } from "@/types/auth.types";
+import type { AuthSession, User } from "@/types/auth.types";
 
-interface AuthStoreState {
+export type AuthStatus = "idle" | "checking" | "authenticated" | "unauthenticated";
+
+export type AuthState = {
+  accessToken: string | null;
   clearSession: () => void;
-  getAccessToken: () => string | null;
-  getRefreshToken: () => string | null;
-  session: AuthSession | null;
-  setSession: (session: AuthSession | null) => void;
-}
+  setAccessToken: (accessToken: string) => void;
+  setChecking: () => void;
+  setSession: (session: AuthSession) => void;
+  status: AuthStatus;
+  user: User | null;
+};
 
-export const useAuthStore = create<AuthStoreState>()(
-  persist(
-    (set, get) => ({
-      clearSession: () => set({ session: null }),
-      getAccessToken: () => get().session?.accessToken ?? null,
-      getRefreshToken: () => get().session?.refreshToken ?? null,
-      session: null,
-      setSession: (session) => set({ session }),
+export const useAuthStore = create<AuthState>()((set) => ({
+  accessToken: null,
+  clearSession: () =>
+    set({
+      accessToken: null,
+      status: "unauthenticated",
+      user: null,
     }),
-    {
-      name: "auth-session",
-    }
-  )
-);
+  setAccessToken: (accessToken) => set({ accessToken }),
+  setChecking: () => set({ status: "checking" }),
+  setSession: (session) =>
+    set({
+      accessToken: session.accessToken,
+      status: "authenticated",
+      user: session.user,
+    }),
+  status: "idle",
+  user: null,
+}));
 
-export const getAuthSessionSnapshot = () => useAuthStore.getState().session;
-export const getAccessToken = () => useAuthStore.getState().getAccessToken();
-export const getRefreshToken = () => useAuthStore.getState().getRefreshToken();
+export const getAuthSessionSnapshot = () => useAuthStore.getState();
+export const getAccessToken = () => useAuthStore.getState().accessToken;
 
-export const setAuthSession = (session: AuthSession | null) => {
+export const setAuthSession = (session: AuthSession) => {
   useAuthStore.getState().setSession(session);
 };
 

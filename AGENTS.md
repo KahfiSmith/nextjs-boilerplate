@@ -5,25 +5,29 @@ Goal: consistent, fast, safe delivery without over-engineering.
 
 ## Source of Truth (Read First)
 - Product and project context: `README.md`
-- Non-negotiable rules: `docs/rules.md`
-- Coding standards: `docs/coding-standards.md`
-- API documentation: `docs/api.md`
-- Architecture: `docs/architecture.md`
-- Database policy: `docs/database.md`
-- Implementation patterns (do not remove): `docs/patterns.md`
-- Workflow reference: `docs/workflow.md`
+- Non-negotiable rules: `docs/RULES.md`
+- Coding standards: `docs/CODING-STANDARDS.md`
+- API documentation: `docs/API.md`
+- Architecture: `docs/ARCHITECTURE.md`
+- Database policy: `docs/DATABASE.md`
+- Implementation patterns (do not remove): `docs/PATTERNS.md`
+- Workflow reference: `docs/WORKFLOW.md`
+- Security rules: `docs/SECURITY.md`
+- Logging and observability: `docs/LOGGING.md`
 
 If any conflict appears, follow the current runtime behavior and active routes in `src/app`.
 
 ## Documentation Sync Rules (Required)
-- If non-negotiable constraints change: update `docs/rules.md`.
-- If coding style, naming, or structure changes: update `docs/coding-standards.md`.
-- If API endpoints change or are added: update `docs/api.md`.
-- If dependency direction or architecture boundaries change: update `docs/architecture.md`.
-- If database workflow, schema policy, or persistence flow changes: update `docs/database.md`.
-- If reusable implementation recipes change: update `docs/patterns.md`.
-- If team implementation flow changes: update `docs/workflow.md`.
-- If env usage changes: update `.env.example` and document it in active docs (`docs/architecture.md` and/or `docs/patterns.md`).
+- If non-negotiable constraints change: update `docs/RULES.md`.
+- If coding style, naming, or structure changes: update `docs/CODING-STANDARDS.md`.
+- If API endpoints change or are added: update `docs/API.md`.
+- If dependency direction or architecture boundaries change: update `docs/ARCHITECTURE.md`.
+- If database workflow, schema policy, or persistence flow changes: update `docs/DATABASE.md`.
+- If reusable implementation recipes change: update `docs/PATTERNS.md`.
+- If team implementation flow changes: update `docs/WORKFLOW.md`.
+- If security constraints change: update `docs/SECURITY.md`.
+- If logging or observability behavior changes: update `docs/LOGGING.md`.
+- If env usage changes: update `.env.example` and document it in active docs (`docs/ARCHITECTURE.md` and/or `docs/PATTERNS.md`).
 - Handoff is incomplete if code changes are done but related docs are not synchronized.
 
 ## Tech Stack (Must Know Before Implementation)
@@ -34,8 +38,8 @@ If any conflict appears, follow the current runtime behavior and active routes i
 - UI system: shadcn/ui style (`components.json`, `src/components/ui`)
 - Utility libraries: `clsx`, `tailwind-merge`, `class-variance-authority`, `lucide-react`, `framer-motion`
 - Linting: ESLint (`eslint.config.mjs`, `next/core-web-vitals`, `next/typescript`)
-- Testing: Jest (`pnpm test`)
-- Auth and app scaffolding available in `src/lib/repositories`, `src/lib/services`, `src/app/api/auth`
+- Testing: no test script is currently configured; add focused tests when behavior requires them.
+- Auth and API scaffolding available in `src/lib/api`, `src/providers`, `src/hooks/auth`, and `src/store`; `src/app/api`, `src/lib/auth`, `src/lib/http`, and `src/lib/repositories` are reserved only until a concrete feature needs them.
 
 ## Non-Negotiables (Hard Rules)
 - Use the Next.js App Router structure:
@@ -99,7 +103,7 @@ Note: `components/ui` must not depend on domain logic.
   1. `src/app/api/**/route.ts`
   2. related service and repository code
   3. related types and schemas (`src/types`, `src/lib/schemas`)
-  4. `docs/api.md`
+  4. `docs/API.md`
 - For protected endpoints, keep auth checks consistent with the selected boundary.
 - Keep response style consistent per endpoint.
 
@@ -115,7 +119,7 @@ Note: `components/ui` must not depend on domain logic.
 Minimum before handoff:
 - `pnpm lint`
 - `pnpm type-check`
-- `pnpm test` (if tests exist and are relevant)
+- `pnpm test` when a test script is configured and tests are relevant
 - manual check for updated flow (at least one happy path and one error path for form or API changes)
 
 If full verification cannot run in local environment, clearly state what was not run.
@@ -135,7 +139,7 @@ If full verification cannot run in local environment, clearly state what was not
 2. Put business logic in `src/lib/services/...`.
 3. Put data access in `src/lib/repositories/...`.
 4. Add request and response schemas or types.
-5. Update `docs/api.md`.
+5. Update `docs/API.md`.
 6. Verify status code, payload, and error path.
 
 ### Pattern C: Update an Existing Endpoint
@@ -178,5 +182,5 @@ pnpm start
 # quality checks
 pnpm lint
 pnpm type-check
-pnpm test
+# add a test script when tests are introduced
 ```

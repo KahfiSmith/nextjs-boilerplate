@@ -9,7 +9,8 @@ This file defines mandatory rules for implementation. `patterns.md` remains the 
   - API routes only in `src/app/api/**/route.ts` when the repo actually has active route handlers
 - Keep route groups explicit:
   - public pages under `src/app/(public)/*`
-  - protected pages under `src/app/(protected)/*`
+  - auth pages under `src/app/(auth)/*`
+  - dashboard/protected pages under `src/app/(dashboard)/*`
 - Do not place business logic directly in route files or UI primitives.
 - Put domain logic in `src/services/*` when a feature grows beyond simple rendering.
 - Never commit secrets or credentials.
@@ -20,12 +21,12 @@ This file defines mandatory rules for implementation. `patterns.md` remains the 
 - Treat existing empty files as placeholders, not as proof that a layer is already implemented.
 - Do not document placeholder modules as active runtime dependencies.
 - If you activate a placeholder area such as `src/providers/*`, `src/lib/api/*`, `src/lib/auth/*`, or `src/store/*`, update the related docs in the same task.
-- If you add the first real API route, `docs/api.md` must stop saying "no active endpoints" in that same change.
+- If you add the first real route handler, `docs/API.md` must document it in that same change.
 
 ## API Response Rules
 
-- Success responses must use a consistent shape per endpoint, typically `{ data: ... }` or `{ message: "..." }`.
-- Error response format: `{ error: "..." }`.
+- Backend responses use the envelope `{ success, message, data }` for success and `{ success, code, message, error }` for errors.
+- Preserve the backend status and error code when mapping API failures.
 - Keep status codes consistent:
   - `400` invalid input
   - `401` unauthorized
@@ -36,13 +37,13 @@ This file defines mandatory rules for implementation. `patterns.md` remains the 
 
 ## Documentation Sync Rules
 
-- API endpoint changes: update `docs/api.md`.
-- Architecture or dependency-direction changes: update `docs/architecture.md`.
-- Implementation pattern changes: update `docs/patterns.md`.
-- Team implementation flow changes: update `docs/workflow.md`.
-- Rule or delivery process changes: update `docs/rules.md`.
-- Coding style or structure changes: update `docs/coding-standards.md`.
-- Database workflow or schema policy changes: update `docs/database.md`.
+- API endpoint changes: update `docs/API.md`.
+- Architecture or dependency-direction changes: update `docs/ARCHITECTURE.md`.
+- Implementation pattern changes: update `docs/PATTERNS.md`.
+- Team implementation flow changes: update `docs/WORKFLOW.md`.
+- Rule or delivery process changes: update `docs/RULES.md`.
+- Coding style or structure changes: update `docs/CODING-STANDARDS.md`.
+- Database workflow or schema policy changes: update `docs/DATABASE.md`.
 - Environment variable changes: update `.env.example` and the relevant docs.
 - README changes are required when visible route structure or setup instructions change.
 

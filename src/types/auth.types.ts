@@ -8,9 +8,12 @@ export interface ApiResponse<T = unknown> {
 
 export interface User {
   email: string;
-  id: string;
+  id: number;
   name: string;
-  role?: string;
+  role: string;
+  is_email_verified: boolean;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface BackendAuthPayload {

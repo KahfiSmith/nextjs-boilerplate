@@ -16,7 +16,7 @@ When database-backed features are added:
 - keep route or page boundaries thin
 - put business rules in `src/services/*`
 - introduce a dedicated persistence layer only when there is real data access to centralize
-- document the chosen location and conventions in `docs/architecture.md`
+- document the chosen location and conventions in `docs/ARCHITECTURE.md`
 
 If a repository layer is introduced later, add it intentionally instead of assuming an old scaffold still exists.
 
@@ -45,8 +45,8 @@ If a repository layer is introduced later, add it intentionally instead of assum
 Every persistence change must update:
 
 1. the active implementation files
-2. `docs/api.md` if endpoint behavior changes
-3. `docs/architecture.md` if new layers or boundaries are introduced
+2. `docs/API.md` if endpoint behavior changes
+3. `docs/ARCHITECTURE.md` if new layers or boundaries are introduced
 4. this file when workflow or safety policy changes
 5. `.env.example` if new database env vars are required
 

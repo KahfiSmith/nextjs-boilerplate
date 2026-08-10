@@ -19,13 +19,14 @@ For future client state work:
 ## Default Path Map
 
 - Public page: `src/app/(public)/<segment>/page.tsx`
-- Protected page: `src/app/(protected)/<segment>/page.tsx`
+- Auth page: `src/app/(auth)/<segment>/page.tsx`
+- Dashboard/protected page: `src/app/(dashboard)/<segment>/page.tsx`
 - Feature UI: `src/components/features/<feature>/...`
 - Common route UI: `src/components/common/<name>.tsx`
 - Service: `src/services/<feature>/<feature>.service.ts`
 - Shared utility: `src/lib/utils/<name>.ts`
 - API helper: `src/lib/api/<name>.ts`
-- Auth helper: `src/lib/auth/<name>.ts`
+- Auth helper: `src/lib/auth/<name>.ts` (only when a frontend-only helper is actually needed)
 - Config: `src/config/<name>.ts`
 - Store: `src/store/<feature>-store.ts`
 - Types: `src/types/<feature>.types.ts`
@@ -44,17 +45,14 @@ For future client state work:
 
 - `pnpm lint`
 - `pnpm type-check`
-- `pnpm test`
-
-Note:
-
-- The current Jest example still targets a removed health route, so treat `pnpm test` as a repository-health signal rather than proof of a working API layer until that mismatch is resolved.
+- `pnpm build`
+- Run the project test command when a test script is configured.
 
 ## Documentation Sync
 
 - Visible app surface or setup changed: update `README.md`
-- API behavior changed: update `docs/api.md`
-- Architecture or path policy changed: update `docs/architecture.md`
-- Implementation recipe changed: update `docs/patterns.md`
-- Database policy changed: update `docs/database.md`
+- API behavior changed: update `docs/API.md`
+- Architecture or path policy changed: update `docs/ARCHITECTURE.md`
+- Implementation recipe changed: update `docs/PATTERNS.md`
+- Database policy changed: update `docs/DATABASE.md`
 - Workflow changed: update this file

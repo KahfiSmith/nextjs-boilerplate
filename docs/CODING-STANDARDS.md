@@ -37,7 +37,8 @@ This file defines coding standards to keep implementation quality consistent.
 ## Routes and Route Groups
 
 - Keep public routes in `src/app/(public)/*`.
-- Keep protected routes in `src/app/(protected)/*`.
+- Keep auth routes in `src/app/(auth)/*`.
+- Keep protected dashboard routes in `src/app/(dashboard)/*`.
 - Route groups organize access and presentation only; they do not replace service boundaries.
 - Do not assume route-group names become part of the URL.
 
@@ -45,7 +46,7 @@ This file defines coding standards to keep implementation quality consistent.
 
 - Put business rules in `src/lib/services/*`.
 - Put reusable frontend API helpers in `src/lib/api/*`.
-- Put auth-specific helpers in `src/lib/auth/*`.
+- Use `src/lib/auth/*` only for future frontend-only auth metadata/helpers; the current backend refresh-cookie flow does not require files there.
 - Keep these helpers small, explicit, and feature-owned.
 - Do not move business rules into hooks or UI components.
 
@@ -67,7 +68,7 @@ This file defines coding standards to keep implementation quality consistent.
 
 - If you add API routes, keep handlers thin and move reusable logic out of `route.ts`.
 - Do not expose raw internal errors to clients.
-- Keep request and response contracts synchronized with `docs/api.md`.
+- Keep request and response contracts synchronized with `docs/API.md`.
 
 ## Validation and Types
 
@@ -76,7 +77,7 @@ This file defines coding standards to keep implementation quality consistent.
 - Prefer re-exporting type modules from `src/types/index.ts` rather than manually listing every symbol once the folder starts growing.
 - Use manual named re-exports only when you intentionally want a curated public surface.
 - Avoid `any`; if unavoidable, explain why.
-- Keep env parsing centralized in `src/config/env.ts` or another explicit config module.
+- Keep environment usage explicit and documented in `.env.example`; the current backend URL is read from `NEXT_PUBLIC_BACKEND_API_URL` by `src/lib/api/client.ts`.
 
 ## Quality Gates
 
@@ -84,7 +85,7 @@ Before handoff, run based on scope:
 
 - `pnpm lint`
 - `pnpm type-check`
-- `pnpm test`
+- Run the project test command when a test script is configured and relevant.
 
 ## Anti-Patterns
 

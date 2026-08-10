@@ -11,13 +11,13 @@ This document contains reusable implementation recipes for common changes in thi
 5. Update `README.md` if the route becomes part of the visible app surface.
 6. Verify with `pnpm lint`, `pnpm type-check`, and a manual responsive check.
 
-## Pattern B: Add a Protected Page
+## Pattern B: Add a Dashboard/Protected Page
 
-1. Create the route in `src/app/(protected)/<segment>/page.tsx`.
-2. Confirm whether middleware alone is enough or whether the page also needs a server-side guard.
+1. Create the route in `src/app/(dashboard)/<segment>/page.tsx`.
+2. Confirm whether the existing client-side session guard is enough for the page.
 3. Keep auth checks explicit and close to the boundary.
-4. Document behavior changes in `README.md` and `docs/architecture.md`.
-5. Test both authorized and unauthorized behavior.
+4. Document behavior changes in `README.md` and `docs/ARCHITECTURE.md`.
+5. Test both authenticated and unauthenticated behavior.
 
 ## Pattern C: Activate a Placeholder Feature Module
 
@@ -33,24 +33,25 @@ This document contains reusable implementation recipes for common changes in thi
 2. Keep the handler as the HTTP boundary only.
 3. Move reusable logic into `src/services/*` or another focused helper module.
 4. Return consistent JSON response shapes.
-5. Update `docs/api.md`.
+5. Update `docs/API.md`.
 6. Add or update tests for both happy path and at least one error path.
 
 ## Pattern E: Add or Update Auth UI
 
-1. Keep route files in `src/app/(public)` or `src/app/(protected)` thin.
+1. Keep route files in `src/app/(auth)` or `src/app/(dashboard)` thin.
 2. Put interactive form UI in `src/components/features/auth/*`.
-3. Read auth configuration from `src/config/env.ts`.
-4. If auth runtime moves beyond placeholder state, document the active flow in `README.md`, `docs/api.md`, and `docs/architecture.md`.
-5. Test redirect and unauthenticated behavior explicitly.
+3. Use the shared Axios clients and endpoint constants in `src/lib/api/*`.
+4. Keep the access token in the non-persisted auth store; never read the backend refresh cookie in JavaScript.
+5. If auth runtime behavior changes, document the active flow in `README.md`, `docs/API.md`, and `docs/ARCHITECTURE.md`.
+6. Test login, refresh/bootstrap, logout, redirect, and unauthenticated behavior as applicable.
 
 ## Pattern F: Introduce a Client Provider or Store
 
 1. Start with local component state first.
 2. Add a provider in `src/providers/*` only when a subtree truly needs shared client context.
 3. Add a store in `src/store/*` only when component state is no longer sufficient.
-4. Scope the provider or store narrowly.
-5. Update docs because these directories are currently documented as placeholder areas.
+4. Scope the provider or store narrowly and keep auth state non-persisted.
+5. Update `docs/ARCHITECTURE.md` when a provider or store becomes part of the active runtime.
 
 ## Pattern G: Add a Shared Utility or Config Module
 

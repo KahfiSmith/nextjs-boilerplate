@@ -23,5 +23,11 @@ pnpm dev
 ```bash
 pnpm lint
 pnpm type-check
+pnpm docs:check
 pnpm build
 ```
+
+## Documentation
+
+- [Documentation index](docs/README.md) - Architecture, API, security, conventions, development, and more.
+- A pre-commit hook runs `pnpm docs:check` automatically to keep docs in sync with the code.

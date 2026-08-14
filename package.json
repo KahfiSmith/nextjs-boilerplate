@@ -8,7 +8,8 @@
     "start": "node ./node_modules/next/dist/bin/next start",
     "lint": "node ./node_modules/eslint/bin/eslint.js src \"*.ts\" \"*.mjs\"",
     "lint:fix": "node ./node_modules/eslint/bin/eslint.js src \"*.ts\" \"*.mjs\" --fix",
-    "type-check": "node ./node_modules/typescript/bin/tsc --noEmit"
+    "type-check": "node ./node_modules/typescript/bin/tsc --noEmit",
+    "docs:check": "node ./scripts/check-docs.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

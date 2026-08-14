@@ -5,29 +5,22 @@ Goal: consistent, fast, safe delivery without over-engineering.
 
 ## Source of Truth (Read First)
 - Product and project context: `README.md`
-- Non-negotiable rules: `docs/RULES.md`
-- Coding standards: `docs/CODING-STANDARDS.md`
-- API documentation: `docs/API.md`
-- Architecture: `docs/ARCHITECTURE.md`
-- Database policy: `docs/DATABASE.md`
-- Implementation patterns (do not remove): `docs/PATTERNS.md`
-- Workflow reference: `docs/WORKFLOW.md`
-- Security rules: `docs/SECURITY.md`
-- Logging and observability: `docs/LOGGING.md`
+- Documentation index: `docs/README.md`
+- Coding standards: `docs/conventions/coding.md`
+- API documentation: `docs/api/overview.md`
+- Architecture: `docs/architecture/overview.md`
+- Database policy: `docs/database/schema.md`
+- Security rules: `docs/security/overview.md`
 
 If any conflict appears, follow the current runtime behavior and active routes in `src/app`.
 
 ## Documentation Sync Rules (Required)
-- If non-negotiable constraints change: update `docs/RULES.md`.
-- If coding style, naming, or structure changes: update `docs/CODING-STANDARDS.md`.
-- If API endpoints change or are added: update `docs/API.md`.
-- If dependency direction or architecture boundaries change: update `docs/ARCHITECTURE.md`.
-- If database workflow, schema policy, or persistence flow changes: update `docs/DATABASE.md`.
-- If reusable implementation recipes change: update `docs/PATTERNS.md`.
-- If team implementation flow changes: update `docs/WORKFLOW.md`.
-- If security constraints change: update `docs/SECURITY.md`.
-- If logging or observability behavior changes: update `docs/LOGGING.md`.
-- If env usage changes: update `.env.example` and document it in active docs (`docs/ARCHITECTURE.md` and/or `docs/PATTERNS.md`).
+- If coding style, naming, or structure changes: update `docs/conventions/`.
+- If API endpoints change or are added: update `docs/api/`.
+- If architecture boundaries change: update `docs/architecture/`.
+- If database workflow or schema policy changes: update `docs/database/`.
+- If security constraints change: update `docs/security/`.
+- If env usage changes: update `.env.example` and document it in active docs.
 - Handoff is incomplete if code changes are done but related docs are not synchronized.
 
 ## Tech Stack (Must Know Before Implementation)
@@ -39,7 +32,7 @@ If any conflict appears, follow the current runtime behavior and active routes i
 - Utility libraries: `clsx`, `tailwind-merge`, `class-variance-authority`, `lucide-react`, `framer-motion`
 - Linting: ESLint (`eslint.config.mjs`, `next/core-web-vitals`, `next/typescript`)
 - Testing: no test script is currently configured; add focused tests when behavior requires them.
-- Auth and API scaffolding available in `src/lib/api`, `src/providers`, `src/hooks/auth`, and `src/store`; `src/app/api`, `src/lib/auth`, `src/lib/http`, and `src/lib/repositories` are reserved only until a concrete feature needs them.
+- Auth and API scaffolding available in `src/lib/api`, `src/providers`, `src/hooks/auth`, and `src/store`; `src/app/api` and `src/lib/repositories` are reserved only until a concrete feature needs them.
 
 ## Non-Negotiables (Hard Rules)
 - Use the Next.js App Router structure:
@@ -85,25 +78,29 @@ If any conflict appears, follow the current runtime behavior and active routes i
 
 ### Layer Responsibilities
 - `src/app/*`: route segments, layout, page composition, metadata.
-- `src/app/api/*`: HTTP boundary (`GET`, `POST`, etc.), status code and response mapping.
+- `src/app/api/*`: HTTP boundary (reserved — no `src/app/api/**` routes exist yet).
 - `src/components/ui/*`: reusable UI primitives.
 - `src/components/features/*`: feature-level business UI composition.
-- `src/lib/services/*`: domain rules and orchestration.
-- `src/lib/repositories/*`: persistence, queries, external integration.
+- `src/lib/api/*`: HTTP boundary for the frontend — Axios clients, endpoints, query config.
 - `src/lib/schemas/*`: schema validation and request-response parsing.
+- `src/lib/utils/*`: pure utility helpers.
+- `src/store/*`: Zustand global state stores.
+- `src/hooks/*`: custom hooks wrapping API calls and mutations.
 - `src/types/*`: domain and API contracts.
 
 ### Dependency Direction
-`app/page/api -> components/features -> services -> repositories -> schemas/types/utils`
+`app -> components/features -> hooks -> lib/api -> store -> types`
+`providers -> lib/api | store` (session bootstrap and query client setup)
 
 Note: `components/ui` must not depend on domain logic.
+`src/lib/services` and `src/lib/repositories` are reserved for a concrete
+feature that needs them; they do not exist yet.
 
 ## API Contract Discipline
 - When an endpoint changes, synchronize:
-  1. `src/app/api/**/route.ts`
-  2. related service and repository code
-  3. related types and schemas (`src/types`, `src/lib/schemas`)
-  4. `docs/API.md`
+  1. `src/lib/api/endpoints.ts`
+  2. related types and schemas (`src/types`, `src/lib/schemas`)
+  3. `docs/api/authentication.md`
 - For protected endpoints, keep auth checks consistent with the selected boundary.
 - Keep response style consistent per endpoint.
 
@@ -119,6 +116,7 @@ Note: `components/ui` must not depend on domain logic.
 Minimum before handoff:
 - `pnpm lint`
 - `pnpm type-check`
+- `pnpm docs:check`
 - `pnpm test` when a test script is configured and tests are relevant
 - manual check for updated flow (at least one happy path and one error path for form or API changes)
 
@@ -139,7 +137,7 @@ If full verification cannot run in local environment, clearly state what was not
 2. Put business logic in `src/lib/services/...`.
 3. Put data access in `src/lib/repositories/...`.
 4. Add request and response schemas or types.
-5. Update `docs/API.md`.
+5. Update `docs/api/authentication.md` (endpoints) and the API overview.
 6. Verify status code, payload, and error path.
 
 ### Pattern C: Update an Existing Endpoint
@@ -149,7 +147,7 @@ If full verification cannot run in local environment, clearly state what was not
 
 ### Pattern D: Auth-Protected Flow
 1. Choose the protection boundary (middleware, route handler, or page guard).
-2. Keep provider and auth configuration synchronized (`src/components/providers`, `src/config`, `src/lib/auth`).
+2. Keep provider and auth configuration synchronized (`src/providers`, `src/config`, `src/store`).
 3. Do not expose sensitive data in client components.
 4. Verify unauthorized and authorized behavior.
 
@@ -182,5 +180,6 @@ pnpm start
 # quality checks
 pnpm lint
 pnpm type-check
+pnpm docs:check
 # add a test script when tests are introduced
 ```

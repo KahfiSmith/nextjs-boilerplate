@@ -1,0 +1,10 @@
+#!/bin/sh
+# Pre-commit hook: keep docs in sync with the repository.
+# Runs pnpm docs:check so documentation drift fails the commit.
+
+echo "Running docs:check..."
+if ! pnpm docs:check; then
+  echo "✖ docs:check failed. Update the docs (or the code) before committing."
+  exit 1
+fi
+exit 0

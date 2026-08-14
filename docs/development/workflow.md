@@ -45,8 +45,23 @@ rules, repository = data access) and update `docs/api/`.
 - [ ] `pnpm lint` passes
 - [ ] `pnpm type-check` passes
 - [ ] `pnpm docs:check` passes
+- [ ] `pnpm verify:all` passes (build + risk + cross-repo)
 - [ ] Manual check of the updated flow (happy path + error path)
 - [ ] Docs synchronized (`docs/`), `.env.example` if env changed
+
+## Verification harness
+
+The repo ships a tiered verification harness:
+
+- `pnpm verify:fast` - lint, type-check, docs:check.
+- `pnpm verify` - adds the production build.
+- `pnpm verify:risk` - classifies change risk by path (low/medium/high).
+- `pnpm verify:cross-repo` - validates FE↔BE sync (endpoints, error codes,
+  cross-repo doc links) against the sibling `fiber-boilerplate` repo.
+- `pnpm verify:all` - everything above.
+
+A pre-commit hook runs `pnpm verify:fast` automatically. CI runs lint,
+type-check, docs:check, build, and risk classification on every push/PR.
 
 ## Documentation sync rules
 

@@ -9,7 +9,12 @@
     "lint": "node ./node_modules/eslint/bin/eslint.js src \"*.ts\" \"*.mjs\"",
     "lint:fix": "node ./node_modules/eslint/bin/eslint.js src \"*.ts\" \"*.mjs\" --fix",
     "type-check": "node ./node_modules/typescript/bin/tsc --noEmit",
-    "docs:check": "node ./scripts/check-docs.mjs"
+    "docs:check": "node ./scripts/check-docs.mjs",
+    "verify:fast": "pnpm lint && pnpm type-check && pnpm docs:check",
+    "verify": "pnpm verify:fast && pnpm build",
+    "verify:risk": "node ./scripts/harness/check-risk.mjs",
+    "verify:cross-repo": "node ./scripts/harness/check-cross-repo.mjs",
+    "verify:all": "pnpm verify && pnpm verify:risk && pnpm verify:cross-repo"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

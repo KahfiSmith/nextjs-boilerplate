@@ -117,6 +117,7 @@ Minimum before handoff:
 - `pnpm lint`
 - `pnpm type-check`
 - `pnpm docs:check`
+- `pnpm verify:all` (adds build + risk classification + cross-repo sync check)
 - `pnpm test` when a test script is configured and tests are relevant
 - manual check for updated flow (at least one happy path and one error path for form or API changes)
 
@@ -181,5 +182,6 @@ pnpm start
 pnpm lint
 pnpm type-check
 pnpm docs:check
+pnpm verify:all
 # add a test script when tests are introduced
 ```

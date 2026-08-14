@@ -47,11 +47,16 @@ Set `NEXT_PUBLIC_BACKEND_API_URL` to match the active mode. The backend
 | `pnpm lint:fix` | ESLint with `--fix` |
 | `pnpm type-check` | `tsc --noEmit` |
 | `pnpm docs:check` | Validate docs stay in sync with the repo (links, `src/` paths, endpoints) |
+| `pnpm verify:fast` | `lint` + `type-check` + `docs:check` |
+| `pnpm verify` | `verify:fast` + production build |
+| `pnpm verify:risk` | Classify change risk by path (low/medium/high) |
+| `pnpm verify:cross-repo` | Validate FE↔BE sync (endpoints, error codes, links) |
+| `pnpm verify:all` | `verify` + `verify:risk` + `verify:cross-repo` |
 
 ## Notes
 
 - There is no `pnpm test` script yet (see
   [Testing Conventions](../conventions/testing.md)).
 - `pnpm build` verifies the app compiles for production.
-- A pre-commit hook runs `pnpm docs:check` automatically (configured via
-  `core.hooksPath` → `.githooks/pre-commit`).
+- A pre-commit hook runs `pnpm verify:fast` (lint + type-check + docs:check)
+  automatically (configured via `core.hooksPath` → `.githooks/pre-commit`).

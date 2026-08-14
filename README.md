@@ -25,9 +25,13 @@ pnpm lint
 pnpm type-check
 pnpm docs:check
 pnpm build
+
+# full verification harness
+pnpm verify:all   # build + risk classification + FE↔BE cross-repo sync check
 ```
 
 ## Documentation
 
 - [Documentation index](docs/README.md) - Architecture, API, security, conventions, development, and more.
-- A pre-commit hook runs `pnpm docs:check` automatically to keep docs in sync with the code.
+- A pre-commit hook runs `pnpm verify:fast` (lint + type-check + docs:check) automatically on commit.
+- GitHub Actions CI runs lint, type-check, docs, build, and risk classification on every push/PR.

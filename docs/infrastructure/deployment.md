@@ -47,17 +47,17 @@ pnpm start
 
 ### Current status
 
-No CI pipeline is configured in this repository yet (no `.github/`, no CI
-config files).
-
-### Intended pipeline (planned)
-
-When a pipeline is added, it should run:
+CI is configured via `.github/workflows/ci.yml` and runs on every push/PR:
 
 1. Install dependencies (`pnpm install --frozen-lockfile`).
 2. ESLint checks (`pnpm lint`).
 3. TypeScript type checks (`pnpm type-check`).
-4. Production build verification (`pnpm build`).
-5. Optional: preview deploy per environment.
+4. Docs validation (`pnpm docs:check`).
+5. Production build verification (`pnpm build`).
+6. Risk classification (`pnpm verify:risk`).
 
-This section is a plan, not current behavior.
+### Cross-repo check
+
+`pnpm verify:cross-repo` validates FE↔BE sync locally (endpoints, error codes,
+doc links) against the sibling backend repo. It is not run in CI by default;
+enable it by checking out the sibling repo in the workflow.

@@ -13,3 +13,5 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - Delete account flow on the profile page (`useDeleteAccount` + `DeleteAccountButton`, wired to `DELETE /api/v1/auth/account`).
+- Verification harness: `verify:fast`/`verify`/`verify:all` scripts, risk classification (`verify:risk`), and cross-repo sync check (`verify:cross-repo`).
+- GitHub Actions CI (`.github/workflows/ci.yml`): lint, type-check, docs, build, risk classification.

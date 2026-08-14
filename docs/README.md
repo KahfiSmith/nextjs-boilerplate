@@ -28,6 +28,7 @@ is `fiber-boilerplate` (Go Fiber); its contract is linked from the
 - [Database](database/schema.md) - Database notes (managed by the backend service).
 - [Infrastructure](infrastructure/deployment.md) - Environments, deployment, CI/CD.
 - [Observability](infrastructure/observability.md) - Current signals and planned tooling.
+- [Verification harness](development/workflow.md) - `verify:*` commands, risk classification, cross-repo sync.
 
 ## Planned, not yet implemented
 
@@ -36,7 +37,7 @@ The following are intentionally not described as implemented:
 - Server-side auth or API routes (`src/app/api/**`) - none exist; route protection is client-side.
 - Middleware-enforced access control - `middleware.ts` is a pass-through.
 - Test suite - no test script is configured yet.
-- CI/CD pipeline and observability tooling - not configured.
+- Observability tooling - not configured.
 - Database layer - managed by the Go Fiber backend, not this frontend repo.
 
 When a planned capability is shipped, promote only its durable decisions into

@@ -73,11 +73,14 @@ interface ApiResponse<T = unknown> {
 | `ACCESS_TOKEN_MISSING` | Access token missing | yes |
 | `ACCOUNT_DISABLED` | Account disabled; treated as session loss | no (defensive) |
 | `FORBIDDEN` | Forbidden | yes |
+| `INVALID_CREDENTIALS` | Wrong email/password | yes |
 | `REFRESH_TOKEN_EXPIRED` | Refresh token expired; forces logout | yes |
 | `REFRESH_TOKEN_INVALID` | Refresh token invalid | yes |
 | `REFRESH_TOKEN_MISSING` | Refresh token missing | yes |
 | `REFRESH_TOKEN_REUSED` | Refresh token reuse detected; forces logout | yes |
 | `SESSION_REVOKED` | Session revoked; forces logout | yes |
+| `UNAUTHORIZED` | Default unauthorized | yes |
+| `VALIDATION_ERROR` | Request validation failed | yes |
 
 > `ACCOUNT_DISABLED` is handled defensively by `handleQueryError` but is not
 > currently produced by the backend. The authoritative backend error-code list

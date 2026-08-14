@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+import { DeleteAccountButton } from "@/components/features/auth/delete-account-button";
 import { LogoutButton } from "@/components/features/auth/logout-button";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/config/routes";
@@ -57,6 +58,10 @@ export default function ProfilePage() {
             <Link href={ROUTES.HOME}>Back home</Link>
           </Button>
           <LogoutButton />
+        </div>
+
+        <div className="border-t pt-4">
+          <DeleteAccountButton />
         </div>
       </section>
     </div>

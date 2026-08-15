@@ -26,8 +26,7 @@ pnpm type-check
 pnpm docs:check
 pnpm build
 
-# full verification harness
-pnpm verify:all   # build + risk classification + FE↔BE cross-repo sync check
+pnpm verify:all   
 ```
 
 ## Documentation

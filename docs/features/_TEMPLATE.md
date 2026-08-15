@@ -88,10 +88,10 @@ pnpm verify:all
 Additional targeted checks when relevant:
 
 ```bash
-# pnpm lint
-# pnpm type-check
-# pnpm docs:check
-# pnpm verify:cross-repo
+pnpm lint
+pnpm type-check
+pnpm docs:check
+pnpm verify:cross-repo
 ```
 
 ## Runtime Evidence

@@ -185,5 +185,4 @@ pnpm lint
 pnpm type-check
 pnpm docs:check
 pnpm verify:all
-# add a test script when tests are introduced
 ```

@@ -17,8 +17,10 @@
 2. Create or compose feature components in `src/components/features/...`.
 3. Reuse primitives from `src/components/ui/...`.
 4. Move non-trivial domain logic into hooks.
-5. Update types and docs when contracts change.
-6. Verify with lint, type-check, and manual flow test.
+5. **Create `docs/features/<feature>.md` from `docs/features/_TEMPLATE.md`** —
+   the docs:check gate fails until the route group is documented.
+6. Update types and docs when contracts change.
+7. Verify with lint, type-check, and manual flow test.
 
 ### Add an API route (App Router)
 
@@ -45,6 +47,7 @@ rules, repository = data access) and update `docs/api/`.
 - [ ] `pnpm lint` passes
 - [ ] `pnpm type-check` passes
 - [ ] `pnpm docs:check` passes
+- [ ] New route groups have `docs/features/<feature>.md` (gate enforced)
 - [ ] `pnpm verify:all` passes (build + risk + cross-repo)
 - [ ] Manual check of the updated flow (happy path + error path)
 - [ ] Docs synchronized (`docs/`), `.env.example` if env changed

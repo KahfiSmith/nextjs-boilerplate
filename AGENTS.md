@@ -20,6 +20,8 @@ If any conflict appears, follow the current runtime behavior and active routes i
 - If architecture boundaries change: update `docs/architecture/`.
 - If database workflow or schema policy changes: update `docs/database/`.
 - If security constraints change: update `docs/security/`.
+- If a new route group / feature is added: create `docs/features/<feature>.md`
+  from `docs/features/_TEMPLATE.md` (the `docs:check` gate fails without it).
 - If env usage changes: update `.env.example` and document it in active docs.
 - Handoff is incomplete if code changes are done but related docs are not synchronized.
 

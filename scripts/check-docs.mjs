@@ -130,6 +130,42 @@ if (!exists(endpointsFile)) {
   }
 }
 
+// --- 4. feature gate: every route group must be documented ------------------
+// A "feature" in this repo is a route group under src/app/ (e.g. (auth)).
+// Each group must have docs/features/<group>.md OR be covered in
+// docs/features/README.md. New route groups without docs fail the check.
+const FEATURES_DIR = join(ROOT, "docs/features");
+const APP_DIR = join(ROOT, "src/app");
+
+if (exists(APP_DIR)) {
+  const routeGroups = new Set();
+  for (const entry of readdirSync(APP_DIR)) {
+    const full = join(APP_DIR, entry);
+    const stat = statSync(full);
+    if (stat.isDirectory() && entry.startsWith("(") && entry.endsWith(")")) {
+      routeGroups.add(entry.slice(1, -1)); // "(auth)" -> "auth"
+    }
+  }
+
+  const featuresReadme = exists(join(FEATURES_DIR, "README.md"))
+    ? readFileSync(join(FEATURES_DIR, "README.md"), "utf8")
+    : "";
+
+  for (const group of routeGroups) {
+    const featureDoc = join(FEATURES_DIR, `${group}.md`);
+    const coveredInReadme =
+      featuresReadme.includes(`${group}.md`) ||
+      featuresReadme.toLowerCase().includes(group.toLowerCase());
+
+    if (!exists(featureDoc) && !coveredInReadme) {
+      errors.push(
+        `Feature "${group}" has no docs/features/${group}.md and is not listed in ` +
+          `docs/features/README.md. Create it from docs/features/_TEMPLATE.md before committing.`
+      );
+    }
+  }
+}
+
 // --- output -----------------------------------------------------------------
 for (const w of warnings) console.warn(`⚠  ${w}`);
 for (const e of errors) console.error(`✖  ${e}`);

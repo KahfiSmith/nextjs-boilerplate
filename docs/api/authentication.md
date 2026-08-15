@@ -35,7 +35,7 @@ remaining endpoints are part of the contract but have no UI flow yet.
 
 ### Envelope
 
-Every response uses `ApiResponse<T>` defined in `src/types/auth.types.ts`:
+Every response uses `ApiResponse<T>` defined in `src/types/api.types.ts`:
 
 ```ts
 interface ApiResponse<T = unknown> {

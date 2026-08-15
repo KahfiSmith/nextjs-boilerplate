@@ -40,7 +40,7 @@ src/
 | `src/lib/utils/`        | Pure utility helpers                                             | `cn.ts`, `format-date.ts`, `format-currency.ts`|
 | `src/providers/`        | Client-side providers mounted once in the root layout            | `app-provider.tsx`, `session-provider.tsx`     |
 | `src/store/`            | Zustand global state                                             | `auth-store.ts`, `theme-store.ts`              |
-| `src/types/`            | Domain and API contracts                                         | `auth.types.ts`, `common.types.ts`             |
+| `src/types/`            | Domain and API contracts                                         | `api.types.ts`, `auth.types.ts`, `common.types.ts` |
 
 ## Dependency rules
 
@@ -58,6 +58,8 @@ src/
 - Feature components use hooks (e.g. `useLogin`, `useLogout`) rather than
   calling API clients directly.
 - Barrel `index.ts` files expose a small public API per directory
-  (`src/config/index.ts`, `src/hooks/auth/index.ts`, `src/components/ui/index.ts`).
+  (`src/types`, `src/store`, `src/hooks/auth`, `src/lib/utils`,
+  `src/components/ui`, `src/components/common`). `src/config` is imported
+  path-specifically (`@/config/routes`, `@/config/site`).
 - `process.env` is read only by approved files (Axios client base URL).
 - No server-only modules exist; there is no server layer to import from.

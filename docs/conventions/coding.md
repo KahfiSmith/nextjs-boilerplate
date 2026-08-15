@@ -21,7 +21,9 @@
 
 - Alias `@/*` maps to `./src/*` (`tsconfig.json`).
 - Barrel exports via `index.ts` for public module surfaces
-  (`src/config/index.ts`, `src/hooks/auth/index.ts`, `src/components/ui/index.ts`).
+  (`src/types`, `src/store`, `src/hooks/auth`, `src/lib/utils`,
+  `src/components/ui`, `src/components/common`). `src/config` stays
+  path-specific (`@/config/routes`, `@/config/site`).
 
 ## Styling
 

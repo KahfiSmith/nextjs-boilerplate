@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import type { AuthSession, User } from "@/types/auth.types";
+import type { AuthSession, User } from "@/types";
 
 export type AuthStatus = "idle" | "checking" | "authenticated" | "unauthenticated";
 

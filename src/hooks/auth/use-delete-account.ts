@@ -7,7 +7,7 @@ import { ROUTES } from "@/config/routes";
 import { API_ENDPOINTS } from "@/lib/api/endpoints";
 import { apiClient } from "@/lib/api/client";
 import type { DeleteAccountInput } from "@/lib/schemas/auth.schema";
-import { useAuthStore } from "@/store/auth-store";
+import { useAuthStore } from "@/store";
 
 export const useDeleteAccount = () => {
   const router = useRouter();

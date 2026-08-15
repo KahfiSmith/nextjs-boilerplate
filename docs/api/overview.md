@@ -9,7 +9,7 @@ and the Go Fiber backend.
   (see `.env.example`, default `http://localhost:8080`).
 - Endpoint paths carry the `/api/v1/...` prefix (e.g. `/api/v1/auth/login`).
 - Every response uses the `ApiResponse<T>` envelope
-  (`src/types/auth.types.ts`).
+  (`src/types/api.types.ts`).
 - Axios clients are defined in `src/lib/api/client.ts`:
   - `authClient` - credentialed (`withCredentials: true`) for auth endpoints.
   - `apiClient` - Bearer token client with single-flight refresh and

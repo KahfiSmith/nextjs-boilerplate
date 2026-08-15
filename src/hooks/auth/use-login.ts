@@ -7,9 +7,9 @@ import { ROUTES } from "@/config/routes";
 import { API_ENDPOINTS } from "@/lib/api/endpoints";
 import { authClient } from "@/lib/api/client";
 import type { LoginInput } from "@/lib/schemas/auth.schema";
-import { useAuthStore } from "@/store/auth-store";
-import type { ApiResponse, BackendAuthPayload } from "@/types/auth.types";
-import { mapAuthPayload } from "@/types/auth.types";
+import { useAuthStore } from "@/store";
+import type { ApiResponse, BackendAuthPayload } from "@/types";
+import { mapAuthPayload } from "@/types";
 
 export const useLogin = () => {
   const router = useRouter();

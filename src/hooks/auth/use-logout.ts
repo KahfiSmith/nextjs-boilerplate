@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { ROUTES } from "@/config/routes";
 import { API_ENDPOINTS } from "@/lib/api/endpoints";
 import { authClient } from "@/lib/api/client";
-import { useAuthStore } from "@/store/auth-store";
+import { useAuthStore } from "@/store";
 
 export const useLogout = () => {
   const router = useRouter();

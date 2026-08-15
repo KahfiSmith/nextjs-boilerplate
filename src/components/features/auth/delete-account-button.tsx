@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button, Input, Label } from "@/components/ui";
-import { useDeleteAccount } from "@/hooks/auth/use-delete-account";
+import { useDeleteAccount } from "@/hooks/auth";
 import {
   DeleteAccountInput,
   deleteAccountSchema,

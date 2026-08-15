@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 import { Button, Input, Label } from "@/components/ui";
 import { ROUTES } from "@/config/routes";
-import { useRegister } from "@/hooks/auth/use-register";
+import { useRegister } from "@/hooks/auth";
 import { RegisterInput, registerSchema } from "@/lib/schemas/auth.schema";
 
 export function RegisterForm() {

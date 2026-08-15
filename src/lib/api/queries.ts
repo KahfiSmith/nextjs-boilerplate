@@ -3,7 +3,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { AUTH_ERROR_CODES } from "@/lib/api/auth-error-codes";
 import { ApiError } from "@/lib/api/error-handler";
 import { QUERY_KEYS } from "@/lib/api/query-keys";
-import { clearAuthSession } from "@/store/auth-store";
+import { clearAuthSession } from "@/store";
 
 export const queryDefaults = {
   auth: {

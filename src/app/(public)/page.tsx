@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { ROUTES } from "@/config/routes";
-import { useAuthStore } from "@/store/auth-store";
+import { useAuthStore } from "@/store";
 import { Footer, Header } from "@/components/common";
 import { Button } from "@/components/ui";
 

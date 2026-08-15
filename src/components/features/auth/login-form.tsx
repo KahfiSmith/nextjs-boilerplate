@@ -7,9 +7,9 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { ROUTES } from "@/config/routes";
-import { useLogin } from "@/hooks/auth/use-login";
 import { LoginInput, loginSchema } from "@/lib/schemas/auth.schema";
 import { Button, Input, Label } from "@/components/ui";
+import { useLogin } from "@/hooks/auth";
 
 export function LoginForm() {
   const searchParams = useSearchParams();

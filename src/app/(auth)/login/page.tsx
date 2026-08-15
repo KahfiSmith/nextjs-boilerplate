@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 import { LoginForm } from "@/components/features/auth/login-form";
 import { ROUTES } from "@/config/routes";
-import { useAuthStore } from "@/store/auth-store";
+import { useAuthStore } from "@/store";
 
 export default function LoginPage() {
   const router = useRouter();

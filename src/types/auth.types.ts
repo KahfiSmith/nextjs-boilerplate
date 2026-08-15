@@ -1,11 +1,3 @@
-export interface ApiResponse<T = unknown> {
-  code?: string;
-  data: T;
-  error?: unknown;
-  message: string;
-  success: boolean;
-}
-
 export interface User {
   email: string;
   id: number;

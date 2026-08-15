@@ -3,9 +3,9 @@ import axios from "axios";
 import { AUTH_ERROR_CODES } from "./auth-error-codes";
 import { API_ENDPOINTS } from "./endpoints";
 import { ROUTES } from "@/config/routes";
-import { clearAuthSession, useAuthStore } from "@/store/auth-store";
-import type { ApiResponse, BackendAuthPayload } from "@/types/auth.types";
-import { mapAuthPayload } from "@/types/auth.types";
+import { clearAuthSession, useAuthStore } from "@/store";
+import type { ApiResponse, BackendAuthPayload } from "@/types";
+import { mapAuthPayload } from "@/types";
 
 export const authClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_API_URL,

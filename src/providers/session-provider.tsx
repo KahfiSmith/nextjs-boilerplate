@@ -4,9 +4,9 @@ import { useEffect, useRef } from "react";
 
 import { API_ENDPOINTS } from "@/lib/api/endpoints";
 import { authClient } from "@/lib/api/client";
-import { clearAuthSession, setAuthSession, useAuthStore } from "@/store/auth-store";
-import type { ApiResponse, BackendAuthPayload } from "@/types/auth.types";
-import { mapAuthPayload } from "@/types/auth.types";
+import { clearAuthSession, setAuthSession, useAuthStore } from "@/store";
+import type { ApiResponse, BackendAuthPayload } from "@/types";
+import { mapAuthPayload } from "@/types";
 
 export function SessionProvider({
   children,

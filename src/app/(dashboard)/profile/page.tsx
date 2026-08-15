@@ -8,7 +8,7 @@ import { DeleteAccountButton } from "@/components/features/auth/delete-account-b
 import { LogoutButton } from "@/components/features/auth/logout-button";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/config/routes";
-import { useAuthStore } from "@/store/auth-store";
+import { useAuthStore } from "@/store";
 
 export default function ProfilePage() {
   const router = useRouter();

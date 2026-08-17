@@ -40,11 +40,10 @@ browser
 
 ## Endpoints
 
-All 10 auth endpoints are defined in `src/lib/api/endpoints.ts`. Five are wired
-to UI (login, register, refresh, logout, delete-account); the rest are defined
-but not yet connected. Google OAuth endpoints (`GET /auth/google`,
-`/auth/google/callback`) are browser-navigation only and live on the backend.
-See [Authentication API](../api/authentication.md).
+`src/lib/api/endpoints.ts` defines 10 axios-called auth endpoints plus the
+Google OAuth browser-navigation paths (`GOOGLE`, `GOOGLE_CALLBACK`). Five are
+wired to UI (login, register, refresh, logout, delete-account); the rest are
+defined but not yet connected. See [Authentication API](../api/authentication.md).
 
 ## Not yet implemented
 

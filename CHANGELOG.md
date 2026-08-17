@@ -18,3 +18,5 @@ All notable changes to this project will be documented in this file.
 - Feature documentation gate: new route groups must be documented in `docs/features/<feature>.md` (template enforced by `docs:check`).
 - Architecture decision records: ADR-001 (in-memory auth session), ADR-002 (single-flight refresh), ADR-003 (client-side route guards).
 - Added `ROADMAP.md` and upgraded `docs/product/overview.md` with a product vision section.
+- Google SSO (OIDC): "Continue with Google" button on the login form; backend handles the OAuth flow.
+- Moved Google OAuth URL out of the component: `googleAuthUrl()` in `src/lib/api/client.ts` + `API_ENDPOINTS.AUTH.GOOGLE`; UI no longer hardcodes the backend URL.

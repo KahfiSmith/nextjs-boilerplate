@@ -98,7 +98,7 @@ if (!exists(endpointsFile)) {
   errors.push("src/lib/api/endpoints.ts is missing");
 } else {
   const endpointsSrc = readFileSync(endpointsFile, "utf8");
-  const endpointPathRe = /"(\/api\/v1\/auth\/[a-z-]+)"/g;
+  const endpointPathRe = /"(\/api\/v1\/auth\/[a-z-/]+)"/g;
   const defined = new Set();
   let m;
   while ((m = endpointPathRe.exec(endpointsSrc)) !== null) {
@@ -110,7 +110,7 @@ if (!exists(endpointsFile)) {
     errors.push(`${ENV_REFERENCE} is missing`);
   } else {
     const docContent = readFileSync(authDoc, "utf8");
-    const docRe = /`(\/api\/v1\/auth\/[a-z-]+)`/g;
+    const docRe = /`(\/api\/v1\/auth\/[a-z-/]+)`/g;
     const documented = new Set();
     while ((m = docRe.exec(docContent)) !== null) {
       documented.add(m[1]);

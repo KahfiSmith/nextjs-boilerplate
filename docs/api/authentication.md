@@ -17,6 +17,13 @@ All endpoints are defined in `src/lib/api/endpoints.ts`. Calls go through
 | `POST` | `/api/v1/auth/resend-verification` | `authClient` | Resend email verification | Defined, not wired |
 | `DELETE` | `/api/v1/auth/account` | `apiClient` | Delete user account | `DeleteAccountButton` → `useDeleteAccount` |
 | `GET` | `/api/v1/auth/me` | `apiClient` | Fetch current user profile | Defined, not wired |
+| `GET` | `/api/v1/auth/google` | browser nav | Start Google OAuth (backend redirects to Google) | `LoginForm` Google button |
+| `GET` | `/api/v1/auth/google/callback` | browser nav | Google OAuth callback (backend sets session, redirects to app) | — (handled by backend) |
+
+> The `/auth/google*` endpoints are **not called via axios** — the frontend
+> navigates to the full URL built by `googleAuthUrl()` in `src/lib/api/client.ts`
+> (from `API_ENDPOINTS.AUTH.GOOGLE`). See
+> [Google OAuth flow](./authentication.md#google-oauth-oidc).
 
 ## Usage map
 

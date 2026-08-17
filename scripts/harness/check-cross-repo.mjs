@@ -43,7 +43,7 @@ if (!existsSync(BE_ROOT)) {
 
   if (fe && be) {
     const feEndpoints = new Set(
-      [...fe.matchAll(/"(\/api\/v1\/auth\/[a-z-]+)"/g)].map((m) => m[1])
+      [...fe.matchAll(/"(\/api\/v1\/auth\/[a-z-/]+)"/g)].map((m) => m[1])
     );
     const beRoutes = new Set(
       [...be.matchAll(/\.(Post|Get|Delete|Put|Patch)\("([^"]+)"/g)]
@@ -52,8 +52,12 @@ if (!existsSync(BE_ROOT)) {
         .map((p) => `/api/v1/auth${p}`)
     );
 
+    // Browser-navigation routes (Google OAuth redirect) are intentionally not
+    // in FE endpoints.ts — the FE calls them via page navigation, not axios.
     const feOnly = [...feEndpoints].filter((p) => !beRoutes.has(p));
-    const beOnly = [...beRoutes].filter((p) => !feEndpoints.has(p));
+    const beOnly = [...beRoutes]
+      .filter((p) => !p.includes("/google"))
+      .filter((p) => !feEndpoints.has(p));
 
     if (feOnly.length) {
       errors.push(`Endpoints in FE but not in BE routes: ${feOnly.join(", ")}`);

@@ -23,6 +23,8 @@ browser
 4. Logout: `useLogout` → `POST /auth/logout` → clears session → `/login`.
 5. Delete account: `useDeleteAccount` → `DELETE /auth/account` (password
    confirmation) → clears session → `/login`.
+6. Google SSO: `LoginForm` → navigate to `GET /auth/google` (browser redirect);
+   backend sets the session and redirects back; `SessionProvider` bootstraps.
 
 ## Implementation map
 
@@ -40,7 +42,9 @@ browser
 
 All 10 auth endpoints are defined in `src/lib/api/endpoints.ts`. Five are wired
 to UI (login, register, refresh, logout, delete-account); the rest are defined
-but not yet connected. See [Authentication API](../api/authentication.md).
+but not yet connected. Google OAuth endpoints (`GET /auth/google`,
+`/auth/google/callback`) are browser-navigation only and live on the backend.
+See [Authentication API](../api/authentication.md).
 
 ## Not yet implemented
 

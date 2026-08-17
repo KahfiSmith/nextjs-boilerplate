@@ -23,6 +23,11 @@ export const apiClient = axios.create({
   withCredentials: false,
 });
 
+export function googleAuthUrl(): string {
+  const base = process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "";
+  return `${base}${API_ENDPOINTS.AUTH.GOOGLE}`;
+}
+
 apiClient.interceptors.request.use((config) => {
   const token = useAuthStore.getState().accessToken;
   if (token && config.headers) {

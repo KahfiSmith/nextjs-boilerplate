@@ -18,6 +18,8 @@
 - [x] Authentication & user session (login, register, logout, refresh,
       session bootstrap, protected profile, delete account) — see
       `docs/features/authentication.md`
+- [x] Google SSO (OIDC) — "Continue with Google" button on login; backend
+      handles the OAuth flow
 - [x] Landing page (`/`)
 - [x] Protected profile surface (`/profile`)
 

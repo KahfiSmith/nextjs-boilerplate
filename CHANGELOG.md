@@ -17,3 +17,4 @@ All notable changes to this project will be documented in this file.
 - GitHub Actions CI (`.github/workflows/ci.yml`): lint, type-check, docs, build, risk classification.
 - Feature documentation gate: new route groups must be documented in `docs/features/<feature>.md` (template enforced by `docs:check`).
 - Architecture decision records: ADR-001 (in-memory auth session), ADR-002 (single-flight refresh), ADR-003 (client-side route guards).
+- Added `ROADMAP.md` and upgraded `docs/product/overview.md` with a product vision section.

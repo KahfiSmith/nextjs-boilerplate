@@ -1,5 +1,15 @@
 # Product Overview
 
+## Product vision
+
+This repository is the **frontend foundation** for a web application that
+requires authentication and per-user data. The final product positioning,
+personas, and business workflows are **not finalized yet** and must not be
+invented by the frontend. The current surface proves the auth/session
+foundation so that a real product can be built on top of it.
+
+For what is planned next, see the [Roadmap](../../ROADMAP.md).
+
 ## Product status
 
 This repository is a **frontend boilerplate**, not a finished product. Product

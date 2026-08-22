@@ -11,7 +11,6 @@ is `fiber-boilerplate` (Go Fiber); its contract is linked from the
 ## Current sources of truth
 
 - [Architecture](architecture/overview.md) - System design, folder structure, data flow, ADRs.
-- [Folder Structure & Dependency Rules](architecture/folder-structure.md) - Directory tree, ownership, dependency rules.
 - [API](api/overview.md) - Backend contract, Axios clients, query config.
 - [Authentication API & Errors](api/authentication.md) - Endpoints, envelope, error codes.
 - [Security](security/overview.md) - Trust boundaries, authentication, authorization.

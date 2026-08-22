@@ -24,7 +24,7 @@ is `fiber-boilerplate` (Go Fiber); its contract is linked from the
 - [Debugging](development/debugging.md) - Common checks and failure modes.
 - [Features](features/authentication.md) - Implemented feature modules (authentication and user session).
 - [Product](product/overview.md) - Product status, business rules, terminology.
-- [Roadmap](../../ROADMAP.md) - Planned work and build order.
+- [Roadmap](product/roadmap.md) - Planned work and build order.
 - [Database](database/schema.md) - Database notes (managed by the backend service).
 - [Infrastructure](infrastructure/deployment.md) - Environments, deployment, CI/CD.
 - [Observability](infrastructure/observability.md) - Current signals and planned tooling.

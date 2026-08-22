@@ -8,7 +8,7 @@ personas, and business workflows are **not finalized yet** and must not be
 invented by the frontend. The current surface proves the auth/session
 foundation so that a real product can be built on top of it.
 
-For what is planned next, see the [Roadmap](../../ROADMAP.md).
+For what is planned next, see the [Roadmap](roadmap.md).
 
 ## Product status
 

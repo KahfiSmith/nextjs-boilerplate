@@ -1,10 +1,19 @@
 #!/bin/sh
-# Pre-commit hook: keep docs in sync with the repository.
-# Runs pnpm docs:check so documentation drift fails the commit.
+# Pre-commit hook: keep docs in sync + run self-audit.
+# Runs `pnpm docs:check` and `pnpm verify:audit` so documentation drift and
+# architectural invariants fail the commit.
 
+set -e
 echo "Running docs:check..."
 if ! pnpm docs:check; then
   echo "✖ docs:check failed. Update the docs (or the code) before committing."
   exit 1
 fi
+
+echo "Running verify:audit..."
+if ! pnpm verify:audit; then
+  echo "✖ verify:audit failed. See docs/auditing/automated-checks.md for the rule list."
+  exit 1
+fi
+
 exit 0

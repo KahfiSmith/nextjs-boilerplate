@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **Self-audit framework** under `docs/auditing/`:
+  - `SELF_AUDIT.md` — 95-item checklist grouped by area (docs sync, features, security, code quality, performance, testing, ops).
+  - `agent-instructions.md` — step-by-step instructions for an AI agent running a deep audit.
+  - `checklist-template.md` — mandatory report template.
+  - `automated-checks.md` — inventory of automated checks and how to extend.
+  - `overview.md` — index of the auditing framework.
+- New scripts in `scripts/harness/`:
+  - `check-self-audit.mjs` — `pnpm verify:audit`: 25+ machine-checkable items (naming, TS hygiene, env consistency, architecture rules, security patterns, dead code).
+  - `audit-report.mjs` — `pnpm audit:report`: aggregates `docs:check` + `verify:risk` + `verify:cross-repo` + `verify:audit` into `.audit/report-YYYY-MM-DD.{json,md}`.
+- New `package.json` scripts: `verify:audit`, `audit:report`.
+- `verify:all` now includes `verify:audit` as a blocking step.
+- Pre-commit hook (`.githooks/pre-commit`) now runs `verify:audit` in addition to `docs:check`.
+- GitHub Actions CI now has a `Self-audit` step that runs `pnpm verify:audit`.
+
 ### Changed
 - Restructured documentation hierarchy into nested domain directories under `docs/`.
 - Aligned documentation with the current repository structure (auth endpoints, dependency rules, folder tree, API envelope, middleware behavior).

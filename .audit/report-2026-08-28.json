@@ -1,0 +1,44 @@
+{
+  "date": "2026-08-28",
+  "commit": "d6450d2",
+  "verdict": "🟢 PASS",
+  "scripts": [
+    {
+      "name": "docs:check",
+      "status": "pass",
+      "blocking": true,
+      "duration_ms": 261,
+      "stdout": "\n> nextjs-boilerplate@0.1.0 docs:check /home/kahfismith/Kahfi/Project/Frontend/nextjs-boilerplate\n> node ./scripts/check-docs.mjs\n\ndocs:check OK — 30 files, 0 warning(s).\n",
+      "stderr": ""
+    },
+    {
+      "name": "verify:risk",
+      "status": "pass",
+      "blocking": false,
+      "duration_ms": 271,
+      "stdout": "\n> nextjs-boilerplate@0.1.0 verify:risk /home/kahfismith/Kahfi/Project/Frontend/nextjs-boilerplate\n> node ./scripts/harness/check-risk.mjs\n\nrisk: high\nchanged: 14 path(s)\n  [high] .githooks/pre-commit\n  [high] .github/workflows/ci.yml\n  [low] AGENTS.md\n  [low] CHANGELOG.md\n  [high] package.json\n  [medium] .audit/report-2026-08-28.json\n  [low] .audit/report-2026-08-28.md\n  [low] docs/auditing/SELF_AUDIT.md\n  [low] docs/auditing/agent-instructions.md\n  [low] docs/auditing/automated-checks.md\n  [low] docs/auditing/checklist-template.md\n  [low] docs/auditing/overview.md\n  [high] scripts/harness/audit-report.mjs\n  [high] scripts/harness/check-self-audit.mjs\n",
+      "stderr": ""
+    },
+    {
+      "name": "verify:cross-repo",
+      "status": "pass",
+      "blocking": true,
+      "duration_ms": 264,
+      "stdout": "\n> nextjs-boilerplate@0.1.0 verify:cross-repo /home/kahfismith/Kahfi/Project/Frontend/nextjs-boilerplate\n> node ./scripts/harness/check-cross-repo.mjs\n\nverify:cross-repo OK — FE↔BE in sync (0 warning(s)).\n",
+      "stderr": ""
+    },
+    {
+      "name": "verify:audit",
+      "status": "pass",
+      "blocking": true,
+      "duration_ms": 1148,
+      "stdout": "\n> nextjs-boilerplate@0.1.0 verify:audit /home/kahfismith/Kahfi/Project/Frontend/nextjs-boilerplate\n> node ./scripts/harness/check-self-audit.mjs\n\n\nverify:audit: 0 error(s), 1 warning(s), 1 total\nverify:audit OK.\n",
+      "stderr": ""
+    }
+  ],
+  "totals": {
+    "errors": 0,
+    "warnings": 0,
+    "failed_blocking": 0
+  }
+}

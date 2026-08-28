@@ -119,11 +119,23 @@ Minimum before handoff:
 - `pnpm lint`
 - `pnpm type-check`
 - `pnpm docs:check`
-- `pnpm verify:all` (adds build + risk classification + cross-repo sync check)
+- `pnpm verify:audit` (internal consistency: naming, TS hygiene, env, architecture, security, dead code)
+- `pnpm verify:all` (adds build + risk classification + cross-repo sync check + audit)
+- `pnpm audit:report` (produces `.audit/report-YYYY-MM-DD.{json,md}` for trend tracking)
 - `pnpm test` when a test script is configured and tests are relevant
 - manual check for updated flow (at least one happy path and one error path for form or API changes)
 
 If full verification cannot run in local environment, clearly state what was not run.
+
+## Self-Audit (drift prevention)
+
+Before declaring a feature "done" or merging a non-trivial PR, the changes
+must pass `pnpm verify:audit` (machine-enforced) and the relevant items in
+[`docs/auditing/SELF_AUDIT.md`](docs/auditing/SELF_AUDIT.md) (manual). For a
+**deep audit** (quarterly, post-refactor, suspected drift), follow the
+workflow in [`docs/auditing/agent-instructions.md`](docs/auditing/agent-instructions.md).
+The master checklist is the source of truth for "is this repo healthy?";
+treat its items as a contract.
 
 ## Implementation Patterns
 

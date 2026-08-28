@@ -14,7 +14,9 @@
     "verify": "pnpm verify:fast && pnpm build",
     "verify:risk": "node ./scripts/harness/check-risk.mjs",
     "verify:cross-repo": "node ./scripts/harness/check-cross-repo.mjs",
-    "verify:all": "pnpm verify && pnpm verify:risk && pnpm verify:cross-repo"
+    "verify:audit": "node ./scripts/harness/check-self-audit.mjs",
+    "audit:report": "node ./scripts/harness/audit-report.mjs",
+    "verify:all": "pnpm verify && pnpm verify:risk && pnpm verify:cross-repo && pnpm verify:audit"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

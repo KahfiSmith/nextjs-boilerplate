@@ -7,7 +7,6 @@ export type AuthStatus = "idle" | "checking" | "authenticated" | "unauthenticate
 export type AuthState = {
   accessToken: string | null;
   clearSession: () => void;
-  setAccessToken: (accessToken: string) => void;
   setChecking: () => void;
   setSession: (session: AuthSession) => void;
   status: AuthStatus;
@@ -22,7 +21,6 @@ export const useAuthStore = create<AuthState>()((set) => ({
       status: "unauthenticated",
       user: null,
     }),
-  setAccessToken: (accessToken) => set({ accessToken }),
   setChecking: () => set({ status: "checking" }),
   setSession: (session) =>
     set({
@@ -34,7 +32,6 @@ export const useAuthStore = create<AuthState>()((set) => ({
   user: null,
 }));
 
-export const getAuthSessionSnapshot = () => useAuthStore.getState();
 export const getAccessToken = () => useAuthStore.getState().accessToken;
 
 export const setAuthSession = (session: AuthSession) => {

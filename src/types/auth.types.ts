@@ -1,8 +1,10 @@
+export type UserRole = "user" | "admin";
+
 export interface User {
   email: string;
   id: number;
   name: string;
-  role: string;
+  role: UserRole;
   is_email_verified: boolean;
   created_at?: string;
   updated_at?: string;
@@ -18,12 +20,6 @@ export interface AuthSession {
   accessToken: string;
   expiresIn: number;
   user: User;
-}
-
-export interface LoginInput {
-  email: string;
-  password: string;
-  redirectTo?: string;
 }
 
 export interface AuthActionResult {

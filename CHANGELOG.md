@@ -10,6 +10,15 @@ All notable changes to this project will be documented in this file.
 - Deepened documentation to match the reference style: tables, ownership maps, data-flow diagrams, and explicit implemented-vs-planned framing.
 - Consolidated overlapping documentation files to reduce count and length (36 files down to 22).
 - Added `pnpm docs:check` validation script and pre-commit hook to keep docs in sync with the repo.
+- **`User.role`** is now a strict `"user" | "admin"` union (`UserRole`) instead of `string`, matching the backend's role values.
+- **Register flow is now auto-login**: `useRegister` reads the same `BackendAuthPayload` envelope as `useLogin`, sets the auth session, and redirects to `/profile` (no more separate login round-trip). Matches the updated BE `/api/v1/auth/register` response.
+- **Open-redirect hardening**: `loginSchema.redirectTo` now validates that the value is a same-origin path (`/^\/(?!\/)/`), preventing external redirects.
+- **Axios interceptor hardening**: `originalRequest._retry` flag is now typed via `RetryableConfig = InternalAxiosRequestConfig & { _retry?: boolean }`; the `BACKEND_API_URL` constant is no longer re-read in 3 separate places.
+- Removed dead code from the auth store: `setAccessToken` and `getAuthSessionSnapshot` were unused; `setAuthSession`/`clearAuthSession` remain as the canonical action helpers.
+- `authClient` is now used for `/auth/register` (cookie-based) instead of `apiClient`, so the refresh cookie is set on register just like on login.
+
+### Removed
+- Unused `framer-motion` dependency (and its entry in `AGENTS.md` tech stack).
 
 ### Added
 - Delete account flow on the profile page (`useDeleteAccount` + `DeleteAccountButton`, wired to `DELETE /api/v1/auth/account`).

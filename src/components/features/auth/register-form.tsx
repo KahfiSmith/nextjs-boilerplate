@@ -32,7 +32,7 @@ export function RegisterForm() {
     toast.promise(promise, {
       error: (err) => err?.message || "Failed to create account.",
       loading: "Creating account...",
-      success: "Account created! Redirecting to login...",
+      success: "Account created! Redirecting...",
     });
   };
 

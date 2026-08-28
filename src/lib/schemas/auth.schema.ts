@@ -1,9 +1,14 @@
 import { z } from "zod";
 
+const internalPath = z
+  .string()
+  .regex(/^\/(?!\/)/, "Must be an internal path")
+  .max(512, "Path too long");
+
 export const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email format"),
   password: z.string().min(1, "Password is required").min(8, "Password must be at least 8 characters"),
-  redirectTo: z.string().optional(),
+  redirectTo: internalPath.optional(),
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;

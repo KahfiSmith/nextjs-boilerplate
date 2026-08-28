@@ -31,7 +31,7 @@ If any conflict appears, follow the current runtime behavior and active routes i
 - Language: TypeScript `strict`
 - Styling: Tailwind CSS `v4` with CSS variables in `src/app/globals.css`
 - UI system: shadcn/ui style (`components.json`, `src/components/ui`)
-- Utility libraries: `clsx`, `tailwind-merge`, `class-variance-authority`, `lucide-react`, `framer-motion`
+- Utility libraries: `clsx`, `tailwind-merge`, `class-variance-authority`, `lucide-react`
 - Linting: ESLint (`eslint.config.mjs`, `next/core-web-vitals`, `next/typescript`)
 - Testing: no test script is currently configured; add focused tests when behavior requires them.
 - Auth and API scaffolding available in `src/lib/api`, `src/providers`, `src/hooks/auth`, and `src/store`; `src/app/api` and `src/lib/repositories` are reserved only until a concrete feature needs them.

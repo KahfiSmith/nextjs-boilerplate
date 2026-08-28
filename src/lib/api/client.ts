@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { type InternalAxiosRequestConfig } from "axios";
 
 import { AUTH_ERROR_CODES } from "./auth-error-codes";
 import { API_ENDPOINTS } from "./endpoints";
@@ -7,8 +7,12 @@ import { clearAuthSession, useAuthStore } from "@/store";
 import type { ApiResponse, BackendAuthPayload } from "@/types";
 import { mapAuthPayload } from "@/types";
 
+const BACKEND_API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "";
+
+type RetryableConfig = InternalAxiosRequestConfig & { _retry?: boolean };
+
 export const authClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_API_URL,
+  baseURL: BACKEND_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -16,7 +20,7 @@ export const authClient = axios.create({
 });
 
 export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BACKEND_API_URL,
+  baseURL: BACKEND_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -24,8 +28,7 @@ export const apiClient = axios.create({
 });
 
 export function googleAuthUrl(): string {
-  const base = process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "";
-  return `${base}${API_ENDPOINTS.AUTH.GOOGLE}`;
+  return `${BACKEND_API_URL}${API_ENDPOINTS.AUTH.GOOGLE}`;
 }
 
 apiClient.interceptors.request.use((config) => {
@@ -57,17 +60,17 @@ export function refreshAccessToken(): Promise<string> {
 }
 
 apiClient.interceptors.response.use(
-  (response) => response.data?.data !== undefined ? response.data.data : response.data,
+  (response) => (response.data?.data !== undefined ? response.data.data : response.data),
   async (error) => {
-    const originalRequest = error.config;
+    const originalRequest = error.config as RetryableConfig | undefined;
     const errorCode = error.response?.data?.code;
 
     const shouldRefresh =
       error.response?.status === 401 &&
       errorCode === AUTH_ERROR_CODES.ACCESS_TOKEN_EXPIRED &&
-      !originalRequest._retry;
+      !originalRequest?._retry;
 
-    if (!shouldRefresh) {
+    if (!shouldRefresh || !originalRequest) {
       return Promise.reject(error);
     }
 

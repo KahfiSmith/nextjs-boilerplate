@@ -49,7 +49,11 @@ if (!existsSync(BE_ROOT)) {
       [...be.matchAll(/\.(Post|Get|Delete|Put|Patch)\("([^"]+)"/g)]
         .map((m) => m[2])
         .filter((p) => p !== "User-Agent")
-        .map((p) => `/api/v1/auth${p}`)
+        .map((p) => {
+          // Normalize parameterized routes like /sessions/:id -> /sessions
+          const base = p.replace(/\/:[a-zA-Z0-9_-]+/g, "");
+          return `/api/v1/auth${base}`;
+        })
     );
 
     // Browser-navigation routes (Google OAuth redirect) are intentionally not

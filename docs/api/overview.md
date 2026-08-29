@@ -8,12 +8,11 @@ and the Go Fiber backend.
 - Backend base URL is configured via `NEXT_PUBLIC_BACKEND_API_URL`
   (see `.env.example`, default `http://localhost:8080`).
 - Endpoint paths carry the `/api/v1/...` prefix (e.g. `/api/v1/auth/login`).
-- Every response uses the `ApiResponse<T>` envelope
-  (`src/types/api.types.ts`).
+- Every response uses the `ApiResponse<T>` envelope (`src/types/api.types.ts`) including `request_id`.
+- OpenAPI schema is defined at backend `docs/openapi/openapi.yaml` and typed via `pnpm api:generate`.
 - Axios clients are defined in `src/lib/api/client.ts`:
   - `authClient` - credentialed (`withCredentials: true`) for auth endpoints.
-  - `apiClient` - Bearer token client with single-flight refresh and
-    `response.data.data` unwrap.
+  - `apiClient` - Bearer token client with single-flight refresh, multi-tab coordination, and `response.data.data` unwrap.
 
 ## Backend contract
 

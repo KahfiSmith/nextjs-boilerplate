@@ -9,6 +9,7 @@
     "lint": "node ./node_modules/eslint/bin/eslint.js src \"*.ts\" \"*.mjs\"",
     "lint:fix": "node ./node_modules/eslint/bin/eslint.js src \"*.ts\" \"*.mjs\" --fix",
     "type-check": "node ./node_modules/typescript/bin/tsc --noEmit",
+    "test": "vitest run",
     "docs:check": "node ./scripts/check-docs.mjs",
     "verify:fast": "pnpm lint && pnpm type-check && pnpm docs:check",
     "verify": "pnpm verify:fast && pnpm build",
@@ -16,6 +17,8 @@
     "verify:cross-repo": "node ./scripts/harness/check-cross-repo.mjs",
     "verify:audit": "node ./scripts/harness/check-self-audit.mjs",
     "audit:report": "node ./scripts/harness/audit-report.mjs",
+    "api:generate": "node ./scripts/generate-api.mjs",
+    "api:check": "openapi-typescript ../../Backend/fiber-boilerplate/docs/openapi/openapi.yaml --check",
     "verify:all": "pnpm verify && pnpm verify:risk && pnpm verify:cross-repo && pnpm verify:audit"
   },
   "dependencies": {
@@ -39,6 +42,9 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",
     "@tailwindcss/postcss": "^4.2.0",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.6",
     "@types/node": "^25.3.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -46,9 +52,13 @@
     "@typescript-eslint/parser": "^8.56.0",
     "eslint": "^9.39.4",
     "eslint-config-next": "16.1.6",
+    "jsdom": "^30.0.1",
+    "msw": "^2.15.0",
+    "openapi-typescript": "^7.13.0",
     "tailwindcss": "^4.2.0",
     "tw-animate-css": "^1.4.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
   },
   "packageManager": "pnpm@10.33.0"
 }

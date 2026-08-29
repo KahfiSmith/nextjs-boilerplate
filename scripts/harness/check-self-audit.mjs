@@ -34,6 +34,7 @@ function walk(dir, exts = []) {
   const out = [];
   if (!existsSync(dir)) return out;
   for (const entry of readdirSync(dir)) {
+    if (entry === "node_modules" || entry === ".next" || entry === ".git") continue;
     const full = join(dir, entry);
     let st;
     try {

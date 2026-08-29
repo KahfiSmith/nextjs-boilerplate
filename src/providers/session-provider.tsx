@@ -4,7 +4,8 @@ import { useEffect, useRef } from "react";
 
 import { API_ENDPOINTS } from "@/lib/api/endpoints";
 import { authClient } from "@/lib/api/client";
-import { clearAuthSession, setAuthSession, useAuthStore } from "@/store";
+import { normalizeApiError } from "@/lib/api/error-handler";
+import { clearAuthSession, setAuthSession, setAuthUnavailable, useAuthStore } from "@/store";
 import type { ApiResponse, BackendAuthPayload } from "@/types";
 import { mapAuthPayload } from "@/types";
 
@@ -29,8 +30,13 @@ export function SessionProvider({
         const envelope = response.data;
         const session = mapAuthPayload(envelope.data);
         setAuthSession(session);
-      } catch {
-        clearAuthSession();
+      } catch (err) {
+        const apiError = normalizeApiError(err);
+        if (apiError.status === 0 || apiError.status >= 500) {
+          setAuthUnavailable();
+        } else {
+          clearAuthSession();
+        }
       }
     }
 

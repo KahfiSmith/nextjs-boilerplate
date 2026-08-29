@@ -8,10 +8,10 @@ export const API_ENDPOINTS = {
     RESET_PASSWORD: "/api/v1/auth/reset-password",
     VERIFY_EMAIL: "/api/v1/auth/verify-email",
     RESEND_VERIFICATION: "/api/v1/auth/resend-verification",
+    SESSIONS: "/api/v1/auth/sessions",
     DELETE_ACCOUNT: "/api/v1/auth/account",
     ME: "/api/v1/auth/me",
 
-    // browser-navigation endpoints (not axios-called).
     GOOGLE: "/api/v1/auth/google",
     GOOGLE_CALLBACK: "/api/v1/auth/google/callback",
   },

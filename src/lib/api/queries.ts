@@ -68,7 +68,13 @@ export const handleQueryError = (
   error: unknown,
   queryKey?: readonly unknown[]
 ) => {
-  const errorCode = (error as { response?: { data?: { code?: string } } })?.response?.data?.code;
+  const apiError = error instanceof ApiError ? error : (error as { response?: { data?: { code?: string } } })?.response?.data?.code ? new ApiError({
+    code: (error as { response?: { data?: { code?: string } } }).response?.data?.code,
+    message: "API error",
+    status: 400,
+  }) : null;
+
+  const errorCode = apiError?.code;
 
   if (
     errorCode === AUTH_ERROR_CODES.REFRESH_TOKEN_EXPIRED ||

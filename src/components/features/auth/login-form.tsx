@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { ROUTES } from "@/config/routes";
-import { LoginInput, loginSchema } from "@/lib/schemas/auth.schema";
+import { LoginInput, loginSchema, sanitizeInternalRedirect } from "@/lib/schemas/auth.schema";
 import { googleAuthUrl } from "@/lib/api/client";
 import { Button, Input, Label } from "@/components/ui";
 import { useLogin } from "@/hooks/auth";
@@ -29,10 +29,13 @@ export function LoginForm() {
   });
 
   const onSubmit = async (data: LoginInput) => {
+    const rawRedirect = searchParams.get("redirectTo");
+    const safeRedirect = sanitizeInternalRedirect(rawRedirect, ROUTES.PROFILE);
+
     const promise = login({
       email: data.email,
       password: data.password,
-      redirectTo: searchParams.get("redirectTo") || ROUTES.PROFILE,
+      redirectTo: safeRedirect,
     });
 
     toast.promise(promise, {
@@ -64,7 +67,15 @@ export function LoginForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="password">Password</Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="password">Password</Label>
+            <Link
+              className="text-xs text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+              href={ROUTES.FORGOT_PASSWORD}
+            >
+              Forgot password?
+            </Link>
+          </div>
           <Input
             id="password"
             {...register("password")}

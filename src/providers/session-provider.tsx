@@ -2,12 +2,9 @@
 
 import { useEffect, useRef } from "react";
 
-import { API_ENDPOINTS } from "@/lib/api/endpoints";
-import { authClient } from "@/lib/api/client";
+import { refreshAccessToken } from "@/lib/api/client";
 import { normalizeApiError } from "@/lib/api/error-handler";
-import { clearAuthSession, setAuthSession, setAuthUnavailable, useAuthStore } from "@/store";
-import type { ApiResponse, BackendAuthPayload } from "@/types";
-import { mapAuthPayload } from "@/types";
+import { clearAuthSession, setAuthUnavailable, useAuthStore } from "@/store";
 
 export function SessionProvider({
   children,
@@ -24,15 +21,10 @@ export function SessionProvider({
       useAuthStore.getState().setChecking();
 
       try {
-        const response = await authClient.post<ApiResponse<BackendAuthPayload>>(
-          API_ENDPOINTS.AUTH.REFRESH
-        );
-        const envelope = response.data;
-        const session = mapAuthPayload(envelope.data);
-        setAuthSession(session);
+        await refreshAccessToken();
       } catch (err) {
         const apiError = normalizeApiError(err);
-        if (apiError.status === 0 || apiError.status >= 500) {
+        if (apiError.status === 0 || apiError.status >= 500 || apiError.status === 429) {
           setAuthUnavailable();
         } else {
           clearAuthSession();

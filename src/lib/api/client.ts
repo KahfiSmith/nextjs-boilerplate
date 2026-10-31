@@ -128,12 +128,15 @@ apiClient.interceptors.response.use(
       originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
       return apiClient(originalRequest);
     } catch (refreshError) {
-      clearAuthSession();
-      authBroadcaster.postMessage({ type: "AUTH_LOGOUT" });
-      if (typeof window !== "undefined") {
-        window.location.replace(ROUTES.LOGIN);
+      const normalized = normalizeApiError(refreshError);
+      if (normalized.status === 401) {
+        clearAuthSession();
+        authBroadcaster.postMessage({ type: "AUTH_LOGOUT" });
+        if (typeof window !== "undefined") {
+          window.location.replace(ROUTES.LOGIN);
+        }
       }
-      return Promise.reject(normalizeApiError(refreshError));
+      return Promise.reject(normalized);
     }
   }
 );

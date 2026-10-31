@@ -102,4 +102,36 @@ describe("Auth refresh & single-flight interceptor", () => {
     });
     expect(useAuthStore.getState().accessToken).toBe("new.jwt.access.token");
   });
+
+  it("does not clear auth session when refresh fails with 429 TOO_MANY_REQUESTS", async () => {
+    server.use(
+      http.post(`*${API_ENDPOINTS.AUTH.REFRESH}`, () => {
+        return HttpResponse.json(
+          {
+            success: false,
+            code: "TOO_MANY_REQUESTS",
+            message: "Too many requests. Please try again later.",
+          },
+          { status: 429 }
+        );
+      })
+    );
+
+    useAuthStore.getState().setSession({
+      accessToken: "expired.token",
+      expiresIn: 900,
+      user: {
+        id: 1,
+        name: "John Doe",
+        email: "john@example.com",
+        role: "user",
+        is_email_verified: true,
+        created_at: "2026-01-01T00:00:00Z",
+        updated_at: "2026-01-01T00:00:00Z",
+      },
+    });
+
+    await expect(apiClient.get(API_ENDPOINTS.AUTH.ME)).rejects.toThrow();
+    expect(useAuthStore.getState().user?.email).toBe("john@example.com");
+  });
 });

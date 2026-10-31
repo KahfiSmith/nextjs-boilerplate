@@ -6,6 +6,7 @@ import { useEffect } from "react";
 
 import { DeleteAccountButton } from "@/components/features/auth/delete-account-button";
 import { LogoutButton } from "@/components/features/auth/logout-button";
+import { SessionsManager } from "@/components/features/auth/sessions-manager";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/config/routes";
 import { useAuthStore } from "@/store";
@@ -45,7 +46,21 @@ export default function ProfilePage() {
         <dl className="grid gap-3 rounded-lg border bg-muted/40 p-4 text-sm">
           <div>
             <dt className="font-medium">Email</dt>
-            <dd className="text-muted-foreground">{user.email}</dd>
+            <dd className="flex items-center gap-2 text-muted-foreground">
+              <span>{user.email}</span>
+              {user.is_email_verified ? (
+                <span className="rounded bg-emerald-500/10 px-1.5 py-0.5 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                  Verified
+                </span>
+              ) : (
+                <Link
+                  className="rounded bg-amber-500/10 px-1.5 py-0.5 text-xs font-medium text-amber-600 hover:underline dark:text-amber-400"
+                  href={ROUTES.VERIFY_EMAIL}
+                >
+                  Unverified • Verify now
+                </Link>
+              )}
+            </dd>
           </div>
           <div>
             <dt className="font-medium">Role</dt>
@@ -53,7 +68,11 @@ export default function ProfilePage() {
           </div>
         </dl>
 
-        <div className="flex gap-3">
+        <div className="border-t pt-4">
+          <SessionsManager />
+        </div>
+
+        <div className="flex gap-3 border-t pt-4">
           <Button asChild variant="outline">
             <Link href={ROUTES.HOME}>Back home</Link>
           </Button>

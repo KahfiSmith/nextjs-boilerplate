@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 
 import { LoginForm } from "@/components/features/auth/login-form";
 import { ROUTES } from "@/config/routes";
@@ -25,5 +25,9 @@ export default function LoginPage() {
     );
   }
 
-  return <LoginForm />;
+  return (
+    <Suspense fallback={<div className="p-6 text-sm text-muted-foreground">Loading...</div>}>
+      <LoginForm />
+    </Suspense>
+  );
 }

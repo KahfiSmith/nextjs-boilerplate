@@ -19,7 +19,13 @@ export class ApiError extends Error {
     super(options.message);
     this.name = "ApiError";
     this.status = options.status;
-    this.code = options.code ?? (options.status >= 500 ? "INTERNAL_ERROR" : "BAD_REQUEST");
+    this.code =
+      options.code ??
+      (options.status === 429
+        ? AUTH_ERROR_CODES.TOO_MANY_REQUESTS
+        : options.status >= 500
+          ? AUTH_ERROR_CODES.INTERNAL_SERVER_ERROR
+          : AUTH_ERROR_CODES.BAD_REQUEST);
     this.details = options.details;
     this.requestId = options.requestId;
   }
@@ -34,7 +40,15 @@ export function normalizeApiError(error: unknown): ApiError {
     const status = error.response?.status ?? (error.code === "ECONNABORTED" ? 408 : 0);
     const data = error.response?.data as ApiResponse | undefined;
 
-    const code = data?.code ?? (status === 401 ? AUTH_ERROR_CODES.UNAUTHORIZED : status >= 500 ? "INTERNAL_ERROR" : "NETWORK_ERROR");
+    const code =
+      data?.code ??
+      (status === 401
+        ? AUTH_ERROR_CODES.UNAUTHORIZED
+        : status === 429
+          ? AUTH_ERROR_CODES.TOO_MANY_REQUESTS
+          : status >= 500
+            ? AUTH_ERROR_CODES.INTERNAL_SERVER_ERROR
+            : "NETWORK_ERROR");
     const message = data?.message ?? error.message ?? "An unexpected API error occurred.";
     const requestId = data?.request_id ?? (error.response?.headers?.["x-request-id"] as string | undefined);
     const details = data?.error ?? error.response?.data;

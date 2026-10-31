@@ -1,20 +1,12 @@
-export type UserRole = "user" | "admin";
+import type { components } from "@/lib/api/generated/schema";
 
-export interface User {
-  email: string;
-  id: number;
-  name: string;
-  role: UserRole;
-  is_email_verified: boolean;
-  created_at?: string;
-  updated_at?: string;
-}
+export type UserRole = "user" | "admin" | (string & {});
 
-export interface BackendAuthPayload {
-  access_token: string;
-  expires_in: number;
-  user: User;
-}
+export type User = components["schemas"]["User"];
+
+export type BackendAuthPayload = components["schemas"]["AuthData"];
+
+export type SessionItem = components["schemas"]["SessionItem"];
 
 export interface AuthSession {
   accessToken: string;
